@@ -1,17 +1,17 @@
 @media only screen and (min-width: 1200px) {
-    p {
+    p, span {
         font-size: 15px !important;
     }
 }
 
 @media only screen and (min-width: 992px) {
-    p {
+    p, span {
         font-size: 14.5px !important;
     }
 }
 
 @media only screen and (min-width: 0) {
-    p {
+    p, span {
         font-size: 14px !important;
     }
 }

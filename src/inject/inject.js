@@ -41,7 +41,24 @@ function initializeTopBar() {
       .then(function (response) {
         return response.json();
       })
-      .then(addElements);
+      .then(function (courses) {
+        // update chrome storage
+        var updated = {};
+        var courseIds = [];
+        for (var course of courses) {
+          courseIds.push(course.id)
+          updated[course.id] = {
+            name: course.name,
+            custom: ""
+          }
+        }
+        updated.courseIds = courseIds;
+
+        chrome.storage.sync.set(updated, function() {
+          console.log('Set courses in extension storage');
+        });
+        addElements(courses);
+      });
   } else {
     addElements(JSON.parse(sessionStorage.getItem('courses')));
   }
@@ -80,7 +97,7 @@ function initializeDashboard() {
       for (var i = 0; i < courseElements.length; i++) {
         courses[courseElements[i].querySelector('a').innerHTML.replace('&amp;', '&')] = percentElements[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "");
       }
-      console.log('Got courses', courses);
+      console.log('Got grades', courses);
 
       var cards = document.getElementsByClassName("ic-DashboardCard");
       for (var card of cards) {

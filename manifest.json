@@ -32,5 +32,10 @@
         "src/inject/inject.js"
       ]
     }
+  ],
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "storage"
   ]
 }
