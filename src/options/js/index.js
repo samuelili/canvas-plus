@@ -7,7 +7,7 @@ function addCustom(id, course) {
   $label.append($input);
   $customs.append($label);
 
-  $input.on('change', function() {
+  $input.on('input', function() {
     var updated = {};
     updated[id] = {
       name: course.name,
@@ -17,11 +17,6 @@ function addCustom(id, course) {
       console.log('Updated value', updated);
     });
   })
-
-// <label>
-//   <input type="checkbox"/>
-//     <span>Grade Tags</span>
-//   </label>
 }
 
 chrome.storage.sync.get({

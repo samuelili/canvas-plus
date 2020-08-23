@@ -54,7 +54,7 @@ function initializeTopBar() {
         }
         updated.courseIds = courseIds;
 
-        chrome.storage.sync.set(updated, function() {
+        chrome.storage.sync.set(updated, function () {
           console.log('Set courses in extension storage');
         });
         addElements(courses);
@@ -111,13 +111,32 @@ function initializeDashboard() {
     }).catch(placeButton)
 }
 
-chrome.extension.sendMessage({}, function (response) {
-  console.log("Initializing Better Canvas");
-  initializeTopBar();
+function initializeCustomLink() {
+  var id = window.location.pathname.split('/')[2]
+  chrome.storage.sync.get(id, function (items) {
+    let custom = items[id].custom;
 
-  if (window.location.pathname === "/") {
-    initializeDashboard();
-  }
-});
+    if (custom !== "") {
+      console.log('Got custom link', custom);
+      var buttonContainer = document.getElementById('course_show_secondary');
 
-// _.a.ajaxJSON(ENV.grades_for_student_url,"GET",{grading_period_id:n,enrollment_id:r},a=>{let e,n=_()(this).closest("tr").children(".percent")
+      var button = document.createElement('a');
+      button.className = "btn button-sidebar-wide";
+      button.href = custom;
+      button.target = '_blank';
+
+      button.innerHTML = '<i class="icon-link"></i> Custom Link';
+      buttonContainer.prepend(button);
+    }
+  });
+}
+
+console.log("Initializing Better Canvas");
+initializeTopBar();
+
+if (window.location.pathname === "/") {
+  initializeDashboard();
+}
+
+if (window.location.pathname.split('/')[1] === 'courses')
+  initializeCustomLink()

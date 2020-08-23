@@ -34,8 +34,6 @@
     }
   ],
   "permissions": [
-    "http://*/*",
-    "https://*/*",
     "storage"
   ]
 }
