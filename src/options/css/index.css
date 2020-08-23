@@ -1,0 +1,17 @@
+@media only screen and (min-width: 1200px) {
+    p {
+        font-size: 15px !important;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    p {
+        font-size: 14.5px !important;
+    }
+}
+
+@media only screen and (min-width: 0) {
+    p {
+        font-size: 14px !important;
+    }
+}
