@@ -2,6 +2,16 @@ var CANVAS_HEADERS = {
   accept: "application/json, text/javascript, application/json+canvas-string-idss"
 };
 
+function waitForReady(callback) {
+  var readyStateCheckInterval = setInterval(function () {
+    if (document.readyState === "complete") {
+      clearInterval(readyStateCheckInterval);
+
+      callback();
+    }
+  }, 10);
+}
+
 function initializeTopBar() {
   var topBarCourses = document.createElement("div");
   topBarCourses.id = "top-bar-courses";
@@ -58,23 +68,34 @@ function initializeDashboard() {
       if (match !== null)
         dashboardAddons.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0];
       else placeButton();
+
+      var parser = new DOMParser();
+      var table = parser.parseFromString(match[0], "text/xml")
+
+      var courseElements = table.getElementsByClassName("course");
+      var percentElements = table.getElementsByClassName("percent");
+
+      var courses = {};
+
+      for (var i = 0; i < courseElements.length; i++) {
+        courses[courseElements[i].querySelector('a').innerHTML.replace('&amp;', '&')] = percentElements[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+      }
+      console.log('Got courses', courses);
+
+      var cards = document.getElementsByClassName("ic-DashboardCard");
+      for (var card of cards) {
+        var value = courses[card.getAttribute('aria-label')];
+        var gradeTag = document.createElement('div');
+        gradeTag.classList.add('grade-tag');
+        gradeTag.innerHTML = value
+        card.append(gradeTag);
+        console.log(card.getAttribute('aria-label'), value);
+      }
     }).catch(placeButton)
 }
 
 chrome.extension.sendMessage({}, function (response) {
   console.log("Initializing Better Canvas");
-  var readyStateCheckInterval = setInterval(function () {
-    if (document.readyState === "complete") {
-      clearInterval(readyStateCheckInterval);
-
-      // ----------------------------------------------------------
-      // This part of the script triggers when page is done loading
-
-      // ----------------------------------------------------------
-
-      // initializeTopBar();
-    }
-  }, 10);
   initializeTopBar();
 
   if (window.location.pathname === "/") {
