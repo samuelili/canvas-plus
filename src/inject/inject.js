@@ -12,9 +12,10 @@ function waitForReady(callback) {
   }, 10);
 }
 
-function initializeTopBar() {
+function initialTabs() {
+  document.body.classList.add('tabs-enabled');
   var topBarCourses = document.createElement("div");
-  topBarCourses.id = "top-bar-courses";
+  topBarCourses.id = "tabs-courses";
 
   document.getElementById("wrapper").prepend(topBarCourses);
 
@@ -23,7 +24,7 @@ function initializeTopBar() {
 
     for (var course of courses) {
       var courseElement = document.createElement("a");
-      courseElement.classList.add('top-bar-course');
+      courseElement.classList.add('tabs-course');
       if (window.location.pathname.split('/')[2] === course.id)
         courseElement.classList.add('selected');
 
@@ -83,7 +84,12 @@ function initializeDashboard() {
       let regex = /(<table)(.*?)(table>)/gs
       let match = grades.match(regex)
       if (match !== null)
-        dashboardAddons.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0];
+        chrome.storage.sync.get({
+          gradesEnabled: true
+        }, function (items) {
+          if (items.gradesEnabled)
+            dashboardAddons.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardAddons.innerHTML;
+        });
       else placeButton();
 
       var parser = new DOMParser();
@@ -99,15 +105,23 @@ function initializeDashboard() {
       }
       console.log('Got grades', courses);
 
-      var cards = document.getElementsByClassName("ic-DashboardCard");
-      for (var card of cards) {
-        var value = courses[card.getAttribute('aria-label')];
-        var gradeTag = document.createElement('div');
-        gradeTag.classList.add('grade-tag');
-        gradeTag.innerHTML = value
-        card.append(gradeTag);
-        console.log(card.getAttribute('aria-label'), value);
+      function addTags() {
+        var cards = document.getElementsByClassName("ic-DashboardCard");
+        for (var card of cards) {
+          var value = courses[card.getAttribute('aria-label')];
+          var gradeTag = document.createElement('div');
+          gradeTag.classList.add('grade-tag');
+          gradeTag.innerHTML = value
+          card.append(gradeTag);
+          console.log(card.getAttribute('aria-label'), value);
+        }
       }
+
+      chrome.storage.sync.get({
+        gradeTagsEnabled: true
+      }, function(items) {
+        if (items.gradeTagsEnabled) addTags()
+      });
     }).catch(placeButton)
 }
 
@@ -132,7 +146,11 @@ function initializeCustomLink() {
 }
 
 console.log("Initializing Better Canvas");
-initializeTopBar();
+chrome.storage.sync.get({
+  tabsEnabled: true
+}, function (items) {
+  if (items.tabsEnabled) initialTabs();
+});
 
 if (window.location.pathname === "/") {
   initializeDashboard();

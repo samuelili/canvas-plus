@@ -20,7 +20,10 @@ function addCustom(id, course) {
 }
 
 chrome.storage.sync.get({
-  courseIds: []
+  courseIds: [],
+  tabsEnabled: true,
+  gradesEnabled: true,
+  gradeTagsEnabled: true
 }, function(items) {
   var courseIds = items.courseIds;
   console.log("Got courseIds", courseIds);
@@ -37,5 +40,33 @@ chrome.storage.sync.get({
     for (var key in items) {
       addCustom(key, items[key]);
     }
+  })
+
+  var $tabs = $('#tabs').attr("checked", items.tabsEnabled);
+  var $grades = $('#grades').attr("checked", items.gradesEnabled);
+  var $gradeTags = $('#grade-tags').attr("checked", items.gradeTagsEnabled);
+
+  $tabs.on('input', function() {
+    chrome.storage.sync.set({
+      tabsEnabled: $tabs.is(":checked")
+    }, function() {
+      console.log('Updated value', $tabs.is(":checked"));
+    });
+  })
+
+  $grades.on('input', function() {
+    chrome.storage.sync.set({
+      gradesEnabled: $grades.is(":checked")
+    }, function() {
+      console.log('Updated value', $grades.is(":checked"));
+    });
+  })
+
+  $gradeTags.on('input', function() {
+    chrome.storage.sync.set({
+      gradeTagsEnabled: $gradeTags.is(":checked")
+    }, function() {
+      console.log('Updated value', $gradeTags.is(":checked"));
+    });
   })
 })
