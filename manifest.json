@@ -21,7 +21,10 @@
         "https://*.instructure.com/*"
       ],
       "css": [
-        "src/inject/inject.css"
+        "src/inject/inject.css",
+        "src/inject/tabs.css",
+        "src/inject/dashboard.css",
+        "src/inject/custom-link.css"
       ]
     },
     {
@@ -29,7 +32,11 @@
         "https://*.instructure.com/*"
       ],
       "js": [
-        "src/inject/inject.js"
+        "src/inject/moment.min.js",
+        "src/inject/inject.js",
+        "src/inject/tabs.js",
+        "src/inject/dashboard.js",
+        "src/inject/custom-link.js"
       ]
     }
   ],

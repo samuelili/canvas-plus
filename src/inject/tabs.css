@@ -1,0 +1,44 @@
+#tabs-courses {
+    display: flex;
+
+    height: 48px;
+    width: 100%;
+
+    border-bottom: 1px solid #ccc;
+}
+
+.tabs-course {
+    display: inline-block;
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 8px;
+    margin: 8px 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+
+    background: #ccc;
+    border-radius: 2px 2px 0 0;
+
+    transition: all 200ms;
+}
+
+.tabs-course:hover {
+    background: #ddd;
+}
+
+.tabs-course.selected {
+    background: #eee;
+    border-bottom: 1px solid white;
+}
+
+/* hide the courses button on the sidebar */
+.tabs-enabled #menu li:nth-child(3) {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    #tabs-courses {
+        display: none;
+    }
+}
