@@ -1,13 +1,13 @@
 function initializeCustomLink() {
-  var id = window.location.pathname.split('/')[2]
-  chrome.storage.sync.get(id, function (items) {
+  let id = window.location.pathname.split('/')[2]
+  chrome.storage.sync.get(id, items => {
     let custom = items[id].custom;
 
     if (custom !== "") {
       console.log('Got custom link', custom);
-      var buttonContainer = document.getElementById('course_show_secondary');
+      let buttonContainer = document.getElementById('course_show_secondary');
 
-      var button = document.createElement('a');
+      let button = document.createElement('a');
       button.className = "btn button-sidebar-wide";
       button.href = custom;
       button.target = '_blank';

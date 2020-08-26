@@ -5,7 +5,7 @@ window.CANVAS_HEADERS = {
 console.log("Initializing Canvas Plus");
 
 function waitForReady(callback) {
-  var readyStateCheckInterval = setInterval(function () {
+  let readyStateCheckInterval = setInterval(() => {
     if (document.readyState === "complete") {
       clearInterval(readyStateCheckInterval);
 

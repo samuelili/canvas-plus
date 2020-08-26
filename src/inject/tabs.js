@@ -1,6 +1,6 @@
-function initialTabs() {
+async function initialTabs() {
   document.body.classList.add('tabs-enabled');
-  var topBarCourses = document.createElement("div");
+  let topBarCourses = document.createElement("div");
   topBarCourses.id = "tabs-courses";
 
   document.getElementById("wrapper").prepend(topBarCourses);
@@ -8,8 +8,8 @@ function initialTabs() {
   function addElements(courses) {
     sessionStorage.setItem('courses', JSON.stringify(courses));
 
-    for (var course of courses) {
-      var courseElement = document.createElement("a");
+    for (let course of courses) {
+      let courseElement = document.createElement("a");
       courseElement.classList.add('tabs-course');
       if (window.location.pathname.split('/')[2] === course.id)
         courseElement.classList.add('selected');
@@ -22,30 +22,27 @@ function initialTabs() {
   }
 
   if (sessionStorage.getItem('courses') === null) {
-    fetch('/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollment', {
+    let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollment', {
       headers: CANVAS_HEADERS
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (courses) {
-        // update chrome storage
-        var updated = {};
-        var courseIds = [];
-        for (var course of courses) {
-          courseIds.push(course.id)
-          updated[course.id] = {
-            name: course.name,
-            custom: ""
-          }
-        }
-        updated.courseIds = courseIds;
+    });
+    courses = await courses.json();
 
-        chrome.storage.sync.set(updated, function () {
-          console.log('Set courses in extension storage');
-        });
-        addElements(courses);
-      });
+    // update chrome storage
+    let updated = {};
+    let courseIds = [];
+    for (let course of courses) {
+      courseIds.push(course.id)
+      updated[course.id] = {
+        name: course.name,
+        custom: ""
+      }
+    }
+    updated.courseIds = courseIds;
+
+    chrome.storage.sync.set(updated, function () {
+      console.log('Set courses in extension storage');
+    });
+    addElements(courses);
   } else {
     addElements(JSON.parse(sessionStorage.getItem('courses')));
   }
@@ -53,6 +50,6 @@ function initialTabs() {
 
 chrome.storage.sync.get({
   tabsEnabled: true
-}, function (items) {
+}, items => {
   if (items.tabsEnabled) initialTabs();
 });

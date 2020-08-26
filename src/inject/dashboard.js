@@ -1,20 +1,20 @@
 async function upcomingAssignments(container) {
-  var dashboardAssignments = document.createElement("div");
+  let dashboardAssignments = document.createElement("div");
   dashboardAssignments.id = "upcoming-assignments-container";
   dashboardAssignments.innerHTML = "<h1>Upcoming Assignments</h1>"
-  var upcomingAssignments = document.createElement("table");
+  let upcomingAssignments = document.createElement("table");
   upcomingAssignments.id = 'upcoming-assignments'
   upcomingAssignments.innerHTML = "Loading...";
   dashboardAssignments.append(upcomingAssignments);
   container.prepend(dashboardAssignments);
 
-  var courses = await fetch('/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollment', {
+  let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollment', {
     headers: CANVAS_HEADERS
   });
   courses = await courses.json();
-  var upcoming = [];
+  let upcoming = [];
 
-  var count = 0;
+  let count = 0;
 
   function ready() {
     // sort upcoming
@@ -23,8 +23,8 @@ async function upcomingAssignments(container) {
     })
 
     upcomingAssignments.innerHTML = '<tr><th>Name</th><th>Course</th><th>Due Date</th></tr>';
-    for (var assignment of upcoming) {
-      var row = document.createElement('tr');
+    for (let assignment of upcoming) {
+      let row = document.createElement('tr');
       row.innerHTML += `<td><a href="${assignment.htmlUrl}">${assignment.name}</a></td>`
       row.innerHTML += `<td><div>${assignment.courseName}</div></td>`
       row.innerHTML += `<td><div>${assignment.dueDate.format('MMM DD')}</div></td>`
@@ -32,19 +32,19 @@ async function upcomingAssignments(container) {
     }
   }
 
-  for (var course of courses) {
+  for (let course of courses) {
     (() => {
-      var courseName = course.name.slice(0);
+      let courseName = course.name.slice(0);
       fetch('/api/v1/courses/' + course.id + '/assignments?bucket=future', {
         headers: CANVAS_HEADERS
       }).then(function (response) {
         return response.json();
       }).then(function (assignments) {
         // parse the assignments
-        for (var assignment of assignments) {
+        for (let assignment of assignments) {
           if (!assignment.due_at) continue;
-          // var dueDate = Date.parse(assignment.due_at);
-          var dueDate = moment(assignment.due_at);
+          // let dueDate = Date.parse(assignment.due_at);
+          let dueDate = moment(assignment.due_at);
           if (dueDate.isBefore(moment().add(7, 'days'))) // 7 days from now
             upcoming.push({
               id: assignment.id,
@@ -63,8 +63,8 @@ async function upcomingAssignments(container) {
   }
 }
 
-function initializeDashboard(container) {
-  var dashboardGrades = document.createElement("div");
+async function initializeDashboard(container) {
+  let dashboardGrades = document.createElement("div");
   dashboardGrades.id = "dashboard-grades";
 
   container.prepend(dashboardGrades);
@@ -74,57 +74,62 @@ function initializeDashboard(container) {
   }
 
   // {grading_period_id:n,enrollment_id:r}
-  fetch('/grades')
-    .then(function (response) {
-      return response.text()
-    })
-    .then(function (grades) {
-      let regex = /(<table)(.*?)(table>)/gs
-      let match = grades.match(regex)
-      if (match !== null)
-        chrome.storage.sync.get({
-          gradesEnabled: true
-        }, function (items) {
-          if (items.gradesEnabled)
-            dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardGrades.innerHTML;
-        });
-      else placeButton();
+  let grades;
+  try {
+    grades = await fetch('/grades')
+  } catch {
+    placeButton();
+  }
+  grades = await grades.json();
 
-      var parser = new DOMParser();
-      var table = parser.parseFromString(match[0], "text/xml")
+  // single out the grades table
+  let regex = /(<table)(.*?)(table>)/gs
+  let match = grades.match(regex)
+  if (match !== null)
+    chrome.storage.sync.get({
+      gradesEnabled: true
+    }, function (items) {
+      if (items.gradesEnabled)
+        dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardGrades.innerHTML;
+    });
+  else placeButton();
 
-      var courseElements = table.getElementsByClassName("course");
-      var percentElements = table.getElementsByClassName("percent");
+  // parse it into a json object
+  let parser = new DOMParser();
+  let table = parser.parseFromString(match[0], "text/xml")
 
-      var courses = {};
+  let courseElements = table.getElementsByClassName("course");
+  let percentElements = table.getElementsByClassName("percent");
 
-      for (var i = 0; i < courseElements.length; i++) {
-        courses[courseElements[i].querySelector('a').innerHTML.replace('&amp;', '&')] = percentElements[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "");
-      }
-      console.log('Got grades', courses);
+  let courses = {};
 
-      function addTags() {
-        var cards = document.getElementsByClassName("ic-DashboardCard");
-        for (var card of cards) {
-          var value = courses[card.getAttribute('aria-label')];
-          var gradeTag = document.createElement('div');
-          gradeTag.classList.add('grade-tag');
-          gradeTag.innerHTML = value
-          card.append(gradeTag);
-          console.log(card.getAttribute('aria-label'), value);
-        }
-      }
+  for (let i = 0; i < courseElements.length; i++) {
+    courses[courseElements[i].querySelector('a').innerHTML.replace('&amp;', '&')] = percentElements[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+  }
+  console.log('Got grades', courses);
 
-      chrome.storage.sync.get({
-        gradeTagsEnabled: true
-      }, function (items) {
-        if (items.gradeTagsEnabled) addTags()
-      });
-    }).catch(placeButton)
+  // add the tags
+  function addTags() {
+    let cards = document.getElementsByClassName("ic-DashboardCard");
+    for (let card of cards) {
+      let value = courses[card.getAttribute('aria-label')];
+      let gradeTag = document.createElement('div');
+      gradeTag.classList.add('grade-tag');
+      gradeTag.innerHTML = value
+      card.append(gradeTag);
+      console.log(card.getAttribute('aria-label'), value);
+    }
+  }
+
+  chrome.storage.sync.get({
+    gradeTagsEnabled: true
+  }, items => {
+    if (items.gradeTagsEnabled) addTags()
+  });
 }
 
 if (window.location.pathname === "/") {
-  var dashboardAddons = document.createElement("div");
+  let dashboardAddons = document.createElement("div");
   dashboardAddons.id = "dashboard-addons";
 
   document.getElementById("content").prepend(dashboardAddons);
