@@ -3,6 +3,10 @@ async function initialTabs() {
   let topBarCourses = document.createElement("div");
   topBarCourses.id = "tabs-courses";
 
+  // need to shift page down if in conversations
+  if (window.location.pathname.split('/')[1].startsWith('conversations'))
+    document.getElementById('main').style.top = '50px';
+
   document.getElementById("wrapper").prepend(topBarCourses);
 
   function addElements(courses) {
