@@ -80,7 +80,7 @@ async function initializeDashboard(container) {
   } catch {
     placeButton();
   }
-  grades = await grades.json();
+  grades = await grades.text();
 
   // single out the grades table
   let regex = /(<table)(.*?)(table>)/gs
