@@ -73,7 +73,6 @@ async function initializeDashboard(container) {
     dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + '<a href="/grades" class="Button button-sidebar-wide">View Grades</a>';
   }
 
-  // {grading_period_id:n,enrollment_id:r}
   let grades;
   try {
     grades = await fetch('/grades')
