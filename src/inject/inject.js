@@ -1,3 +1,12 @@
+const updateMessage = {
+  version: "0.1.0",
+  firstMessage: "Thanks for installing Canvas+! Be sure to go to settings to customize your experience!",
+  message: "This extension is under heavy development, if there are any issues please DM @samuelili",
+  changes: ["Course Tabs", "Custom Links", "Grades and Assignments in Dashboard"],
+}
+const DEFAULT_VERSION = "0.0.0";
+
+
 window.CANVAS_HEADERS = {
   accept: "application/json, text/javascript, application/json+canvas-string-ids"
 };
@@ -31,12 +40,53 @@ function settingsButton() {
     "                Canvas+" +
     "              </div>" +
     "            </a>"
-  console.log(chrome.runtime.getURL("/src/options/index.html"));
+
   button.addEventListener('click', () => {
     chrome.runtime.sendMessage({action: "OPTIONS"});
   });
 
   document.getElementById('menu').append(button);
 }
+
+function changeLog(version) {
+  const container = document.createElement("div");
+  container.className = "canvas-plus-message";
+
+  if (version !== updateMessage.version || version === DEFAULT_VERSION) {
+    let message = updateMessage.message;
+    if (version === DEFAULT_VERSION)
+      message = updateMessage.firstMessage + " " + message;
+
+    message += '</br>Changes</br>'
+    for (let change of updateMessage.changes) {
+      message += ` - ${change}</br>`;
+    }
+
+    container.innerHTML = `${message}</br><a>Hide</a>`
+
+    document.body.append(container);
+
+    chrome.storage.sync.set({
+      version: updateMessage.version,
+      messageHidden: false
+    }, () => {
+      console.log('Updated sync version');
+    });
+
+    container.lastChild.addEventListener('click', () => {
+      container.style.display = 'none';
+      chrome.storage.sync.set({
+        messageHidden: true
+      });
+    })
+  }
+
+}
+
+chrome.storage.sync.get({
+  version: DEFAULT_VERSION
+}, function (items) {
+  changeLog(items.version);
+});
 
 settingsButton();

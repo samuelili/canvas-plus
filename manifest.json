@@ -1,15 +1,14 @@
 {
-  "name": "Better Canvas",
-  "version": "0.0.1",
+  "name": "Canvas+",
+  "version": "0.1.0",
   "manifest_version": 2,
-  "description": "An extension to enhance the canvas experience",
-  "homepage_url": "http://extensionizr.com",
+  "description": "An extension to enhance the Canvas with features students want",
+  "homepage_url": "http://github.com/samuelili/canvas-plus",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "default_locale": "en",
   "background": {
     "page": "src/bg/background.html",
     "persistent": true
@@ -41,7 +40,6 @@
     }
   ],
   "permissions": [
-    "storage",
-    "activeTab"
+    "storage"
   ]
 }

@@ -1,3 +1,19 @@
+.header {
+    display: flex;
+    align-items: center;
+    margin: 32px 0;
+}
+
+.header > img {
+    transform: translateY(4px);
+    margin-right: 8px;
+}
+
+.header > h1 {
+    display: inline-block;
+    margin: 0;
+}
+
 @media only screen and (min-width: 1200px) {
     p, span {
         font-size: 15px !important;

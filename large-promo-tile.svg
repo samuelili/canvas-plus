@@ -7,16 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="440"
-   height="280"
-   viewBox="0 0 116.41666 74.083336"
+   width="920"
+   height="680"
+   viewBox="0 0 243.41665 179.91667"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="C:\projects\better-canvas\icons\icon16.png"
-   inkscape:export-xdpi="12"
-   inkscape:export-ydpi="12"
+   inkscape:export-filename="C:\projects\better-canvas\large-promo-tile.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="logo.svg">
+   sodipodi:docname="large-promo-tile.svg">
   <defs
      id="defs2">
     <inkscape:path-effect
@@ -61,9 +61,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="164.98582"
-     inkscape:cy="100.13058"
+     inkscape:zoom="0.70000001"
+     inkscape:cx="-229.4544"
+     inkscape:cy="218.25316"
      inkscape:document-units="mm"
      inkscape:current-layer="g839"
      inkscape:document-rotation="0"
@@ -98,7 +98,7 @@
       <g
          id="g839">
         <g
-           transform="translate(41.318289,11.979978)"
+           transform="matrix(2.3075996,0,0,2.3075996,83.424816,32.817928)"
            id="g1518">
           <path
              transform="translate(-0.52916687,-0.52916637)"
@@ -123,13 +123,13 @@
         </g>
         <text
            id="text1512"
-           y="61.416584"
-           x="22.338663"
-           style="font-style:normal;font-weight:normal;font-size:17.4451px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.115392"
+           y="146.89783"
+           x="39.627434"
+           style="font-style:normal;font-weight:normal;font-size:40.2563px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.266279"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Gilroy-Bold;-inkscape-font-specification:Gilroy-Bold;stroke-width:0.115392"
-             y="61.416584"
-             x="22.338663"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Gilroy-Bold;-inkscape-font-specification:Gilroy-Bold;stroke-width:0.266279"
+             y="146.89783"
+             x="39.627434"
              id="tspan1510"
              sodipodi:role="line">Canvas+</tspan></text>
       </g>
