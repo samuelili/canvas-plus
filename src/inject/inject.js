@@ -5,6 +5,7 @@ const updateMessage = {
   changes: ["Course Tabs", "Custom Links", "Grades and Assignments in Dashboard"],
 }
 const DEFAULT_VERSION = "0.0.0";
+const INSTANCE = window.location.hostname.split('.')[0];
 
 
 window.CANVAS_HEADERS = {
@@ -82,6 +83,11 @@ function changeLog(version) {
   }
 
 }
+
+chrome.runtime.sendMessage({
+  action: 'REGISTER_INSTANCE',
+  instance: INSTANCE
+});
 
 chrome.storage.sync.get({
   version: DEFAULT_VERSION

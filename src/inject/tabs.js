@@ -32,28 +32,21 @@ async function initialTabs() {
     courses = await courses.json();
 
     // update chrome storage
-    let updated = {};
-    let courseIds = [];
-    for (let course of courses) {
-      courseIds.push(course.id)
-      updated[course.id] = {
-        name: course.name,
-        custom: ""
-      }
-    }
-    updated.courseIds = courseIds;
-
-    chrome.storage.sync.set(updated, function () {
-      console.log('Set courses in extension storage');
-    });
+    chrome.runtime.sendMessage({
+      action: "SET_COURSES",
+      courses,
+      instance: INSTANCE
+    })
     addElements(courses);
   } else {
     addElements(JSON.parse(sessionStorage.getItem('courses')));
   }
 }
 
-chrome.storage.sync.get({
-  tabsEnabled: true
-}, items => {
-  if (items.tabsEnabled) initialTabs();
+chrome.runtime.sendMessage({
+  action: 'GET_SETTING',
+  instance: INSTANCE,
+  key: 'tabsEnabled'
+}, enabled => {
+  if (enabled) initialTabs();
 });

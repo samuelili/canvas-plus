@@ -1,72 +1,85 @@
 var $customs = $('#customs');
 
-function addCustom(id, course) {
-  console.log('Setting up course with id ' + id, course);
-  var $label = $('<div><h6>' + course.name + '</h6></div>');
-  var $input = $('<input type="text" placeholder="http://..."/>').val(course.custom);
-  $label.append($input);
-  $customs.append($label);
+chrome.runtime.sendMessage({
+  action: 'GET'
+}, state => {
+  let tabs = document.querySelector('.tabs');
+  if (state.instances.length === 0) return;
 
-  $input.on('input', function() {
-    var updated = {};
-    updated[id] = {
-      name: course.name,
-      custom: $input.val()
+  let currentInstance = state[state.instances[0]];
+
+  //   courseIds: [],
+  // tabsEnabled: true,
+  // gradesEnabled: true,
+  // gradeTagsEnabled: true
+  console.log(currentInstance);
+
+  var $tabs = $('#tabs');
+  var $grades = $('#grades')
+  var $gradeTags = $('#grade-tags')
+
+  function populateTabs() {
+    $tabs.attr("checked", currentInstance.settings.tabsEnabled);
+    $grades.attr("checked", currentInstance.settings.gradesEnabled);
+    $gradeTags.attr("checked", currentInstance.settings.gradeTagsEnabled);
+
+    $customs.html(""); // clear html
+    for (let courseId of currentInstance.courses) {
+      let id = courseId;
+      let course = currentInstance[courseId];
+      console.log('Setting up course with id ' + id, course);
+      let $label = $('<div><h6>' + course.name + '</h6></div>');
+      let $input = $('<input type="text" placeholder="http://..."/>').val(course.custom);
+      $label.append($input);
+      $customs.append($label);
+
+      $input.on('input', function () {
+        currentInstance[courseId].custom = $input.val();
+        console.log(currentInstance[courseId]);
+      })
     }
-    chrome.storage.sync.set(updated, function() {
-      console.log('Updated value', updated);
-    });
-  })
-}
+  }
 
-chrome.storage.sync.get({
-  courseIds: [],
-  tabsEnabled: true,
-  gradesEnabled: true,
-  gradeTagsEnabled: true
-}, function(items) {
-  var courseIds = items.courseIds;
-  console.log("Got courseIds", courseIds);
+  // add tabs
+  for (let instance of state.instances) {
+    const tab = document.createElement('li');
+    tab.className = 'tab col s3';
+    tab.innerHTML = `<a href="#${instance}">${instance}</a>`;
 
-  var request = {};
-  for (var id of courseIds)
-    request[id] = {
-      "name" : "",
-      "custom": ""
-    }
+    tab.addEventListener('click', () => {
+      currentInstance = state[instance];
+      populateTabs(state.instances.indexOf(instance));
+    })
+    tabs.append(tab);
+  }
+  tabs = M.Tabs.init(document.querySelector('.tabs'), {});
 
-  chrome.storage.sync.get(request, function(items) {
-    console.log(items);
-    for (var key in items) {
-      addCustom(key, items[key]);
-    }
+  $tabs.on('input', function () {
+    currentInstance.settings.tabsEnabled = $tabs.is(":checked");
+    console.log('Updated value', $tabs.is(":checked"));
   })
 
-  var $tabs = $('#tabs').attr("checked", items.tabsEnabled);
-  var $grades = $('#grades').attr("checked", items.gradesEnabled);
-  var $gradeTags = $('#grade-tags').attr("checked", items.gradeTagsEnabled);
-
-  $tabs.on('input', function() {
-    chrome.storage.sync.set({
-      tabsEnabled: $tabs.is(":checked")
-    }, function() {
-      console.log('Updated value', $tabs.is(":checked"));
-    });
+  $grades.on('input', function () {
+    currentInstance.settings.gradesEnabled = $grades.is(":checked");
+    console.log('Updated value', $grades.is(":checked"));
   })
 
-  $grades.on('input', function() {
-    chrome.storage.sync.set({
-      gradesEnabled: $grades.is(":checked")
-    }, function() {
-      console.log('Updated value', $grades.is(":checked"));
-    });
-  })
+  $gradeTags.on('input', function () {
+    currentInstance.settings.gradeTagsEnabled = $gradeTags.is(":checked");
+    console.log('Updated value', $grades.is(":checked"));
+  });
 
-  $gradeTags.on('input', function() {
-    chrome.storage.sync.set({
-      gradeTagsEnabled: $gradeTags.is(":checked")
-    }, function() {
-      console.log('Updated value', $gradeTags.is(":checked"));
-    });
-  })
+  $('#update-button').on('click', () => {
+    chrome.runtime.sendMessage({
+      action: 'SET',
+      state: state
+    }, () => {
+      console.log('Successfully Updated');
+    })
+  });
+
+  populateTabs();
 })
+
+// chrome.storage.sync.get({
+// })

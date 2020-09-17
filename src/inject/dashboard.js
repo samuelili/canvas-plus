@@ -85,12 +85,14 @@ async function initializeDashboard(container) {
   let regex = /(<table)(.*?)(table>)/gs
   let match = grades.match(regex)
   if (match !== null)
-    chrome.storage.sync.get({
-      gradesEnabled: true
-    }, function (items) {
-      if (items.gradesEnabled)
-        dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardGrades.innerHTML;
-    });
+    chrome.runtime.sendMessage({
+      action: 'GET_SETTING',
+      instance: INSTANCE,
+      key: 'gradesEnabled'
+    }, enabled => {
+      if (enabled)
+        dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardGrades.innerHTML;;
+    })
   else placeButton();
 
   // parse it into a json object
@@ -120,11 +122,13 @@ async function initializeDashboard(container) {
     }
   }
 
-  chrome.storage.sync.get({
-    gradeTagsEnabled: true
-  }, items => {
-    if (items.gradeTagsEnabled) addTags()
-  });
+  chrome.runtime.sendMessage({
+    action: 'GET_SETTING',
+    instance: INSTANCE,
+    key: 'gradeTagsEnabled'
+  }, enabled => {
+    if (enabled) addTags();
+  })
 }
 
 if (window.location.pathname === "/") {
@@ -132,6 +136,8 @@ if (window.location.pathname === "/") {
   dashboardAddons.id = "dashboard-addons";
 
   document.getElementById("content").prepend(dashboardAddons);
+
+
   upcomingAssignments(dashboardAddons);
   initializeDashboard(dashboardAddons);
 }

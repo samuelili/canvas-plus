@@ -1,7 +1,12 @@
 function initializeCustomLink() {
+
   let id = window.location.pathname.split('/')[2]
-  chrome.storage.sync.get(id, items => {
-    let custom = items[id].custom;
+  chrome.runtime.sendMessage({
+    action: "GET_COURSES",
+    instance: INSTANCE
+  }, courses => {
+    if (!Object.keys(courses).includes(id)) return;
+    let custom = courses[id].custom;
 
     if (custom !== "") {
       console.log('Got custom link', custom);
@@ -15,7 +20,7 @@ function initializeCustomLink() {
       button.innerHTML = '<i class="icon-link"></i> Custom Link';
       buttonContainer.prepend(button);
     }
-  });
+  })
 }
 
 if (window.location.pathname.split('/')[1] === 'courses')
