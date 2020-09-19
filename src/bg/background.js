@@ -22,10 +22,13 @@ chrome.storage.sync.get({
     let request = {};
     request[instance] = DEFAULT_INSTANCE;
     chrome.storage.sync.get(request, items => {
-      state[instance] = items[instance];
-      console.log('got', items);
+      if (items[instance]) {
+        state[instance] = items[instance];
+      }
     });
   }
+
+  console.log(state);
 });
 
 
@@ -49,9 +52,10 @@ function set(request, sender, sendResponse) {
 
 // register an instance
 function registerInstance(request, sender, sendResponse) {
-  if (!state.instances.includes(request.instance)) {
-    state.instances.push(request.instance);
-    state[request.instance] = {};
+  if (!state.instances.includes(request.instance) || Object.keys(state[request.instance]).length === 0) {
+    if (!state.instances.includes(request.instance))
+      state.instances.push(request.instance);
+    state[request.instance] = DEFAULT_INSTANCE;
     chrome.storage.sync.set({instances: state.instances}, () => console.log('Updated sync instances', state.instances));
   } else {
     console.log(request.instance, 'already registered!');
@@ -62,6 +66,7 @@ function registerInstance(request, sender, sendResponse) {
 function setCourses(request, sender, sendResponse) {
   let instance = request.instance;
   let courses = request.courses;
+
   for (let course of courses) { // make a new one, otherwise, don't override
     if (!Object.keys(state[instance]).includes(course.id)) {
       state[instance].courses.push(course.id);
@@ -78,9 +83,9 @@ function setCourses(request, sender, sendResponse) {
 // get courses
 function getCourses({instance}, sender, sendResponse) {
   let returnObj = {};
-  for (let course of state[instance].courses)
+  for (let course of state[instance].courses) {
     returnObj[course] = state[instance][course]
-
+  }
   sendResponse(returnObj);
 }
 

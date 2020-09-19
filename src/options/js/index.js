@@ -3,6 +3,7 @@ var $customs = $('#customs');
 chrome.runtime.sendMessage({
   action: 'GET'
 }, state => {
+  console.log('Got state', state);
   let tabs = document.querySelector('.tabs');
   if (state.instances.length === 0) return;
 

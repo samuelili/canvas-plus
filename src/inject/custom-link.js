@@ -5,6 +5,7 @@ function initializeCustomLink() {
     action: "GET_COURSES",
     instance: INSTANCE
   }, courses => {
+    console.log("Got courses", courses);
     if (!Object.keys(courses).includes(id)) return;
     let custom = courses[id].custom;
 

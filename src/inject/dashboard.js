@@ -14,6 +14,15 @@ async function upcomingAssignments(container) {
   courses = await courses.json();
   let upcoming = [];
 
+  // updated courses in state
+  chrome.runtime.sendMessage({
+    action: "SET_COURSES",
+    courses: courses,
+    instance: INSTANCE
+  }, () => {
+    console.log('Set courses');
+  })
+
   let count = 0;
 
   function ready() {
@@ -136,7 +145,6 @@ if (window.location.pathname === "/") {
   dashboardAddons.id = "dashboard-addons";
 
   document.getElementById("content").prepend(dashboardAddons);
-
 
   upcomingAssignments(dashboardAddons);
   initializeDashboard(dashboardAddons);
