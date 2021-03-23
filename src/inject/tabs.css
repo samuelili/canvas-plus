@@ -1,4 +1,5 @@
 #tabs-courses {
+    position: relative;
     display: flex;
 
     height: 48px;
@@ -30,6 +31,37 @@
 .tabs-course.selected {
     background: #eee;
     border-bottom: 1px solid white;
+}
+
+.tabs-dropdown-button {
+    flex: 0 1 40px;
+    cursor: pointer;
+    max-width: 24px; /* i do not know why this works but it works */
+    text-align: center;
+}
+
+.tabs-dropdown {
+    display: block;
+    position: absolute;
+    top: 49px;
+    right: 0;
+    opacity: 0;
+
+    background: #efefef;
+    border-radius: 8px;
+    padding: 16px;
+
+    z-index: 100;
+    pointer-events: none;
+}
+
+.tabs-dropdown.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tabs-dropdown a {
+    display: block;
 }
 
 /* hide the courses button on the sidebar */

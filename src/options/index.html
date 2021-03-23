@@ -3,6 +3,7 @@
 <head>
     <title>Canvas+ Options</title>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"/>
     <link type="text/css" rel="stylesheet" href="css/index.css"/>
 </head>
@@ -22,11 +23,27 @@
         <input type="checkbox" id="tabs"/>
         <span>Course Tabs</span>
     </label>
+
+    <h5>
+        Change the order of your tabs
+    </h5>
+    <p>
+        Use the arrows to move your courses up and down to reorder your tabs.
+    </p>
+    <div id="order-tabs">
+
+    </div>
     <h3>Dashboard</h3>
     <p>Adds the grades table to the dashboard for quick viewing</p>
     <label>
         <input type="checkbox" id="grades"/>
         <span>Grades</span>
+    </label>
+
+    <p>Adds upcoming assignments within one week</p>
+    <label>
+        <input type="checkbox" id="upcoming-assignments"/>
+        <span>Upcoming Assignments</span>
     </label>
 
     <p>Adds tags to the top left of course cards that show the grade of that class</p>

@@ -31,3 +31,32 @@
         font-size: 14px !important;
     }
 }
+
+/*
+  ===========================
+  Tabs
+  ===========================
+   */
+
+.order-course {
+    display: flex;
+    height: 48px;
+    line-height: 48px;
+    vertical-align: middle;
+    border-bottom: 1px solid #ccc;
+}
+
+.order-course > div {
+    flex: 0 1;
+}
+
+.order-course .text {
+    flex: 1;
+    font-size: 14px;
+    padding-left: 22px;
+}
+
+.order-course > div i {
+    display: block;
+    cursor: pointer;
+}

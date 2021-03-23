@@ -1,5 +1,11 @@
 #dashboard-addons {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
+}
+
+#dashboard-addons > * {
+    flex-shrink: 1;
 }
 
 #dashboard-grades {
@@ -7,12 +13,12 @@
     margin-right: 16px;
 }
 
-#upcoming-assignments-container {
+#upcoming-assignments-container, #dashboard-grades-container {
     display: inline-block;
 }
 
-#upcoming-assignments td, th {
-    border-left: 16px solid transparent;
+#dashboard-addons td, th {
+    padding: 0 16px 0 0;
 }
 
 #dashboard-addons td > * {

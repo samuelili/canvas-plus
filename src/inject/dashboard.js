@@ -72,80 +72,71 @@ async function upcomingAssignments(container) {
   }
 }
 
+function createDashboardGrades(container, grades) {
+  let dashboardGradesContainer = document.createElement("div");
+  dashboardGradesContainer.id = "dashboard-grades-container";
+  dashboardGradesContainer.innerHTML = "<h1>Grades</h1>"
+  let dashboardGrades = document.createElement("table");
+  dashboardGrades.id = 'dashboard-grades'
+  dashboardGrades.innerHTML = "Loading...";
+  dashboardGradesContainer.append(dashboardGrades);
+  container.prepend(dashboardGradesContainer);
+
+  dashboardGrades.innerHTML = '<tr><th>Name</th><th>Due Date</th></tr>';
+  for (let courseName of Object.keys(grades)) {
+    console.log(courseName);
+    let row = document.createElement('tr');
+    row.innerHTML += `<td><div>${courseName}<div/></td>`
+    row.innerHTML += `<td><div>${grades[courseName]}%<div/></td>`
+    dashboardGrades.append(row);
+  }
+}
+
 async function initializeDashboard(container) {
-  let dashboardGrades = document.createElement("div");
-  dashboardGrades.id = "dashboard-grades";
+  let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
+    headers: CANVAS_HEADERS
+  });
+  courses = await courses.json();
 
-  container.prepend(dashboardGrades);
+  let grades = {};
 
-  function placeButton() {
-    dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + '<a href="/grades" class="Button button-sidebar-wide">View Grades</a>';
-  }
-
-  let grades;
-  try {
-    grades = await fetch('/grades')
-  } catch {
-    placeButton();
-  }
-  grades = await grades.text();
-
-  // single out the grades table
-  let regex = /(<table)(.*?)(table>)/gs
-  let match = grades.match(regex)
-  if (match !== null)
-    chrome.runtime.sendMessage({
-      action: 'GET_SETTING',
-      instance: INSTANCE,
-      key: 'gradesEnabled'
-    }, enabled => {
-      if (enabled)
-        dashboardGrades.innerHTML = "<h1 id='grades-title'>Grades</h1>" + match[0] + dashboardGrades.innerHTML;;
-    })
-  else placeButton();
-
-  // parse it into a json object
-  let parser = new DOMParser();
-  let table = parser.parseFromString(match[0], "text/xml")
-
-  let courseElements = table.getElementsByClassName("course");
-  let percentElements = table.getElementsByClassName("percent");
-
-  let courses = {};
-
-  for (let i = 0; i < courseElements.length; i++) {
-    courses[courseElements[i].querySelector('a').innerHTML.replace('&amp;', '&')] = percentElements[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "");
-  }
-  console.log('Got grades', courses);
+  courses.forEach((course) => {
+    if (course.enrollments[0].type === "student") {
+      let score = course.enrollments[0].computed_current_score;
+      if (score)
+        grades[course.name] = score;
+    }
+  });
+  console.log(grades);
 
   // add the tags
   function addTags() {
     let cards = document.getElementsByClassName("ic-DashboardCard");
     for (let card of cards) {
-      let value = courses[card.getAttribute('aria-label')];
+      let score = grades[card.getAttribute('aria-label')];
       let gradeTag = document.createElement('div');
       gradeTag.classList.add('grade-tag');
-      gradeTag.innerHTML = value
-      card.append(gradeTag);
-      console.log(card.getAttribute('aria-label'), value);
+      gradeTag.innerHTML = score + "%";
+
+      if (score)
+        card.append(gradeTag);
     }
   }
 
-  chrome.runtime.sendMessage({
-    action: 'GET_SETTING',
-    instance: INSTANCE,
-    key: 'gradeTagsEnabled'
-  }, enabled => {
-    if (enabled) addTags();
-  })
+  if (state.settings.gradeTagsEnabled) addTags();
+  if (state.settings.gradesEnabled) createDashboardGrades(container, grades);
 }
 
-if (window.location.pathname === "/") {
-  let dashboardAddons = document.createElement("div");
-  dashboardAddons.id = "dashboard-addons";
+function dashboardInit() {
+  if (window.location.pathname === "/") {
+    let dashboardAddons = document.createElement("div");
+    dashboardAddons.id = "dashboard-addons";
 
-  document.getElementById("content").prepend(dashboardAddons);
+    document.getElementById("content").prepend(dashboardAddons);
 
-  upcomingAssignments(dashboardAddons);
-  initializeDashboard(dashboardAddons);
+    if (state.settings.upcomingAssignmentsEnabled)
+      upcomingAssignments(dashboardAddons);
+    if (state.settings.gradesEnabled || state.settings.gradeTagsEnabled)
+      initializeDashboard(dashboardAddons);
+  }
 }

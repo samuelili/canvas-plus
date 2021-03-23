@@ -1,12 +1,13 @@
 const updateMessage = {
-  version: "0.1.1.2",
+  version: "0.3.0",
   firstMessage: "Thanks for installing Canvas+! Be sure to go to settings to customize your experience!",
   message: "This extension is under heavy development, if there are any issues please DM @samuelili",
-  changes: ["Modified settings page", "Support for multiple Canvases", "Fixed custom links not working"],
+  changes: ["Significantly changed how data is handled in the back, allowing for more changes in the future.", "Better grades!", "If things are not working, please uninstall and reinstall Canvas+"],
 }
 const DEFAULT_VERSION = "0.0.0";
 const INSTANCE = window.location.hostname.split('.')[0];
-
+const functions = [tabsInit, customInit, dashboardInit];
+let state;
 
 window.CANVAS_HEADERS = {
   accept: "application/json, text/javascript, application/json+canvas-string-ids"
@@ -17,16 +18,6 @@ const settingsSvg = "<svg xmlns=\"http://www.w3.org/2000/svg\" class='ic-icon-sv
   "</svg>"
 
 console.log("Initializing Canvas Plus");
-
-function waitForReady(callback) {
-  let readyStateCheckInterval = setInterval(() => {
-    if (document.readyState === "complete") {
-      clearInterval(readyStateCheckInterval);
-
-      callback();
-    }
-  }, 10);
-}
 
 // inject the settings button
 function settingsButton() {
@@ -53,8 +44,9 @@ function changeLog(version) {
   const container = document.createElement("div");
   container.className = "canvas-plus-message";
 
+
   if (version !== updateMessage.version || version === DEFAULT_VERSION) {
-    let message = updateMessage.message;
+    let message = `Version ${updateMessage.version}</br>` + updateMessage.message;
     if (version === DEFAULT_VERSION)
       message = updateMessage.firstMessage + " " + message;
 
@@ -67,26 +59,26 @@ function changeLog(version) {
 
     document.body.append(container);
 
-    chrome.storage.sync.set({
-      version: updateMessage.version,
-      messageHidden: false
-    }, () => {
-      console.log('Updated sync version');
-    });
-
     container.lastChild.addEventListener('click', () => {
       container.style.display = 'none';
+
       chrome.storage.sync.set({
+        version: updateMessage.version,
         messageHidden: true
+      }, () => {
+        console.log('Updated sync version');
       });
     })
   }
-
 }
 
 chrome.runtime.sendMessage({
   action: 'REGISTER_INSTANCE',
   instance: INSTANCE
+}, function (instance) {
+  state = instance;
+  console.log(instance);
+  functions.forEach(func => func());
 });
 
 chrome.storage.sync.get({
@@ -95,4 +87,4 @@ chrome.storage.sync.get({
   changeLog(items.version);
 });
 
-settingsButton();
+// settingsButton();

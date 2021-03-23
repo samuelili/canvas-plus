@@ -1,6 +1,6 @@
 {
   "name": "Canvas+",
-  "version": "0.1.1.2",
+  "version": "0.3.0",
   "manifest_version": 2,
   "description": "An extension to enhance the Canvas with features students want",
   "homepage_url": "http://github.com/samuelili/canvas-plus",
@@ -31,12 +31,14 @@
         "https://*.instructure.com/*"
       ],
       "js": [
+        "src/inject/jquery.min.js",
         "src/inject/moment.min.js",
-        "src/inject/inject.js",
         "src/inject/tabs.js",
         "src/inject/dashboard.js",
-        "src/inject/custom-link.js"
-      ]
+        "src/inject/custom-link.js",
+        "src/inject/inject.js"
+      ],
+      "run_at": "document_end"
     }
   ],
   "permissions": [

@@ -1,52 +1,78 @@
-async function initialTabs() {
-  document.body.classList.add('tabs-enabled');
-  let topBarCourses = document.createElement("div");
-  topBarCourses.id = "tabs-courses";
-
-  // need to shift page down if in conversations
-  if (window.location.pathname.split('/')[1].startsWith('conversations'))
-    document.getElementById('main').style.top = '50px';
-
-  document.getElementById("wrapper").prepend(topBarCourses);
-
-  function addElements(courses) {
-    sessionStorage.setItem('courses', JSON.stringify(courses));
-
-    for (let course of courses) {
-      let courseElement = document.createElement("a");
-      courseElement.classList.add('tabs-course');
-      if (window.location.pathname.split('/')[2] === course.id)
-        courseElement.classList.add('selected');
-
-      courseElement.href = "/courses/" + course.id;
-      courseElement.innerText = course.name;
-
-      topBarCourses.append(courseElement);
-    }
-  }
-
-  if (sessionStorage.getItem('courses') === null) {
-    let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollment', {
-      headers: CANVAS_HEADERS
+async function getTabs() {
+    let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
+        headers: CANVAS_HEADERS
     });
     courses = await courses.json();
 
-    // update chrome storage
+    console.log(courses);
+
+    sessionStorage.setItem('courses', "true");
     chrome.runtime.sendMessage({
-      action: "SET_COURSES",
-      courses,
-      instance: INSTANCE
+        action: "SET_COURSES",
+        courses,
+        instance: INSTANCE
+    }, newState => {
+        state = newState;
+        createTabs();
     })
-    addElements(courses);
-  } else {
-    addElements(JSON.parse(sessionStorage.getItem('courses')));
-  }
 }
 
-chrome.runtime.sendMessage({
-  action: 'GET_SETTING',
-  instance: INSTANCE,
-  key: 'tabsEnabled'
-}, enabled => {
-  if (enabled) initialTabs();
-});
+function createTabs() {
+    let courseIds = state.courseIds;
+    let courses = state.courses;
+
+    console.log('Creating tabs with', courseIds, courses);
+    document.body.classList.add('tabs-enabled');
+    let topBarCourses = document.createElement("div");
+    topBarCourses.id = "tabs-courses";
+
+    // need to shift page down if in conversations
+    if (window.location.pathname.split('/')[1].startsWith('conversations'))
+        document.getElementById('main').style.top = '50px';
+
+    document.getElementById("wrapper").prepend(topBarCourses);
+
+    for (let courseId of courseIds) {
+        let course = courses[courseId];
+        console.log('Adding tab', courseId);
+        let courseElement = document.createElement("a");
+        courseElement.classList.add('tabs-course');
+        if (window.location.pathname.split('/')[2] === course.id)
+            courseElement.classList.add('selected');
+
+        courseElement.href = "/courses/" + course.id;
+        courseElement.innerText = course.name;
+
+        topBarCourses.append(courseElement);
+    }
+
+    /*
+    Need to inject the hamburger dropdown
+     */
+    let $dropdown = $(`<div class="tabs-dropdown">
+            <a href="https://cuhsd.instructure.com/courses">All Courses</a>
+            <a href="#" class="settings">Settings</a>
+        </div>`);
+    let $dropdownButton = $(`<div class="tabs-course tabs-dropdown-button">☰</div>`);
+
+    $dropdownButton.on('click', () => {
+        $dropdown.toggleClass('active');
+    });
+
+    $dropdown.find('.settings').on('click', () =>
+        chrome.runtime.sendMessage({action: "OPTIONS"}));
+
+    $dropdown.click(() => $dropdown.removeClass('active'));
+
+    topBarCourses.append($dropdownButton[0]);
+    topBarCourses.append($dropdown[0]);
+}
+
+function tabsInit() {
+    if (!sessionStorage.getItem('courses')) {
+        getTabs();
+    } else if (state.settings.tabsEnabled) {
+        createTabs();
+    } else
+        settingsButton();
+}

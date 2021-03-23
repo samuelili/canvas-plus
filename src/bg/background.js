@@ -1,9 +1,10 @@
 let DEFAULT_INSTANCE = {
-  courses: [],
+  courses: {},
+  courseIds: [],
   settings: {
-    courseIds: [],
     tabsEnabled: true,
     gradesEnabled: true,
+    upcomingAssignmentsEnabled: true,
     gradeTagsEnabled: true
   }
 }
@@ -11,8 +12,19 @@ let DEFAULT_INSTANCE = {
 // we maintain local state here
 // also default settings
 let state = {
-
 };
+
+// resetting legacy settings goes here in case of version differences
+function resetLegacy() {
+
+}
+
+// resetting legacy settings for each instance goes here
+function resetLegacyInstance(instance) {
+  if (Array.isArray(state[instance].courses)) {
+    state[instance].courses = {};
+  }
+}
 
 chrome.storage.sync.get({
   instances: [],
@@ -23,12 +35,14 @@ chrome.storage.sync.get({
     request[instance] = DEFAULT_INSTANCE;
     chrome.storage.sync.get(request, items => {
       if (items[instance]) {
-        state[instance] = items[instance];
+        state[instance] = {...DEFAULT_INSTANCE, ...items[instance]};
       }
+      resetLegacyInstance(instance)
     });
   }
 
   console.log(state);
+  resetLegacy();
 });
 
 
@@ -48,36 +62,51 @@ function set(request, sender, sendResponse) {
   state = request.state;
   console.log('Updated with state', request.state);
   chrome.storage.sync.set(state, () => console.log('Updated entire state'));
+  sendResponse(true);
 }
 
 // register an instance
 function registerInstance(request, sender, sendResponse) {
-  if (!state.instances.includes(request.instance) || Object.keys(state[request.instance]).length === 0) {
-    if (!state.instances.includes(request.instance))
-      state.instances.push(request.instance);
+  if (!Object.keys(state).includes(request.instance)) {
+    state.instances.push(request.instance);
     state[request.instance] = DEFAULT_INSTANCE;
-    chrome.storage.sync.set({instances: state.instances}, () => console.log('Updated sync instances', state.instances));
   } else {
-    console.log(request.instance, 'already registered!');
+    state[request.instance] = {...DEFAULT_INSTANCE, ...state[request.instance]};
   }
+
+  console.log("Sending", state[request.instance]);
+  sync(request.instance);
+  sendResponse(state[request.instance]);
+  // if (!state.instances.includes(request.instance) || Object.keys(state[request.instance]).length === 0) {
+  //   if (!state.instances.includes(request.instance))
+  //     state.instances.push(request.instance);
+  //   state[request.instance] = DEFAULT_INSTANCE;
+  //   chrome.storage.sync.set({instances: state.instances}, () => console.log('Updated sync instances', state.instances));
+  // } else {
+  //   console.log(request.instance, 'already registered!');
+  // }
 }
 
 // update courses
 function setCourses(request, sender, sendResponse) {
-  let instance = request.instance;
-  let courses = request.courses;
+  let instance = state[request.instance];
+  let newCourses = request.courses;
 
-  for (let course of courses) { // make a new one, otherwise, don't override
-    if (!Object.keys(state[instance]).includes(course.id)) {
-      state[instance].courses.push(course.id);
-      state[instance][course.id] = {
-        name: course.name,
-        custom: ""
-      }
+  for (let course of newCourses) {
+    instance.courses[course.id] = {
+      name: course.name,
+      custom: "",
+      id: course.id,
+      ...(instance.courses[course.id] || {}) // if it doesn't exist, just use an empty object
+    };
+
+    if (!instance.courseIds.includes(course.id)) {
+      instance.courseIds.push(course.id);
     }
   }
 
   sync(instance);
+  sendResponse(instance);
 }
 
 // get courses
@@ -98,6 +127,26 @@ function setSetting({instance, key, value}, sender, sendResponse) {
 // get settings
 function getSetting({instance, key}, sender, sendResponse) {
   sendResponse(state[instance].settings[key]);
+}
+
+// set settings
+function getTabs({instance}, sender, sendResponse) {
+  let courses = [];
+  state[instance].courses.forEach(courseId =>
+      courses.push({
+        ...state[instance][courseId],
+        id: courseId
+      }));
+  sendResponse({
+    courses: courses,
+    enabled: state[instance].settings.tabsEnabled
+  })
+}
+
+function reset() {
+  state = {
+
+  }
 }
 
 //example of using a message handler from the inject scripts
@@ -125,6 +174,9 @@ chrome.extension.onMessage.addListener(
         break;
       case "GET_SETTING":
         getSetting(request, sender, sendResponse);
+        break;
+      case "GET_TABS":
+        getTabs(request, sender, sendResponse);
         break;
       case "OPTIONS":
         if (chrome.runtime.openOptionsPage) {
