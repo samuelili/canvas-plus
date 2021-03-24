@@ -1,8 +1,8 @@
 const updateMessage = {
-  version: "0.3.0",
+  version: "0.3.1",
   firstMessage: "Thanks for installing Canvas+! Be sure to go to settings to customize your experience!",
   message: "This extension is under heavy development, if there are any issues please DM @samuelili",
-  changes: ["Significantly changed how data is handled in the back, allowing for more changes in the future.", "Better grades!", "If things are not working, please uninstall and reinstall Canvas+"],
+  changes: ["Significantly changed how data is handled in the back, allowing for more changes in the future.", "Better grades!", "You can hide tabs now!", "If things are not working, please uninstall and reinstall Canvas+"],
 }
 const DEFAULT_VERSION = "0.0.0";
 const INSTANCE = window.location.hostname.split('.')[0];

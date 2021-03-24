@@ -63,11 +63,16 @@ chrome.runtime.sendMessage({
                         <i class="up material-icons">arrow_drop_up</i>
                         <i class="down material-icons">arrow_drop_down</i>
                     </div>
-                    <div class="text">${currentInstance.courses[courseId].name}</div></div>`)
+                    <div class="text">${currentInstance.courses[courseId].name}</div>
+                    <label>
+                      <input type="checkbox" class="hide"/>
+                      <span>Hide</span>
+                    </label>
+                    </div>`)
         $orderTabs.append($course);
 
-        $up = $course.find('.up');
-        $down = $course.find('.down');
+        let $up = $course.find('.up');
+        let $down = $course.find('.down');
         if (i !== 0)
           $up.on('click', () => {
             currentInstance.courseIds.splice(i, 1);
@@ -80,6 +85,31 @@ chrome.runtime.sendMessage({
             currentInstance.courseIds.splice(i + 1, 0, courseId);
             populateOrder();
           })
+
+        let $hide = $course.find('.hide');
+        $hide.on('change', () => {
+          currentInstance.courseIds.splice(i, 1);
+          currentInstance.hiddenCourseIds.push(courseId);
+          populateOrder();
+        })
+      });
+
+      currentInstance.hiddenCourseIds.forEach((courseId, i) => {
+        let $hiddenCourse = $(`<div class="order-course">
+                    <div class="text">${currentInstance.courses[courseId].name}</div>
+                    <label>
+                      <input type="checkbox" class="hide" checked="checked"/>
+                      <span>Hide</span>
+                    </label>
+                    </div>`)
+        $orderTabs.append($hiddenCourse);
+
+        let $hide = $hiddenCourse.find('.hide');
+        $hide.on('change', () => {
+          currentInstance.hiddenCourseIds.splice(i, 1);
+          currentInstance.courseIds.push(courseId);
+          populateOrder();
+        })
       });
     }
 
@@ -115,6 +145,10 @@ chrome.runtime.sendMessage({
     }, () => {
       console.log('Successfully Updated');
     })
+  });
+
+  $('#cancel-button').on('click', () => {
+    location.reload();
   });
 
   /*

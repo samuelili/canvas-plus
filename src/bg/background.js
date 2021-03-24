@@ -1,6 +1,7 @@
 let DEFAULT_INSTANCE = {
   courses: {},
   courseIds: [],
+  hiddenCourseIds: [],
   settings: {
     tabsEnabled: true,
     gradesEnabled: true,
@@ -100,7 +101,7 @@ function setCourses(request, sender, sendResponse) {
       ...(instance.courses[course.id] || {}) // if it doesn't exist, just use an empty object
     };
 
-    if (!instance.courseIds.includes(course.id)) {
+    if (!instance.courseIds.includes(course.id) && !instance.hiddenCourseIds.includes(course.id)) {
       instance.courseIds.push(course.id);
     }
   }
