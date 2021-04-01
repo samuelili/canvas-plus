@@ -82,29 +82,40 @@ function createDashboardGrades(container, grades) {
   dashboardGradesContainer.append(dashboardGrades);
   container.prepend(dashboardGradesContainer);
 
-  dashboardGrades.innerHTML = '<tr><th>Name</th><th>Due Date</th></tr>';
-  for (let courseName of Object.keys(grades)) {
-    console.log(courseName);
-    let row = document.createElement('tr');
-    row.innerHTML += `<td><div>${courseName}<div/></td>`
-    row.innerHTML += `<td><div>${grades[courseName]}%<div/></td>`
-    dashboardGrades.append(row);
+  dashboardGrades.innerHTML = '<tr><th>Name</th><th>Grade</th></tr>';
+  function addCourse(courseId) {
+    let courseGrade = grades[courseId];
+    if (courseGrade) {// if it exists
+      let row = document.createElement('tr');
+      row.innerHTML += `<td><a href="/courses/${courseId}/grades">${courseGrade.name}<a/></td>`
+      row.innerHTML += `<td><div>${courseGrade.score}%<div/></td>`
+      dashboardGrades.append(row);
+    }
+  }
+
+  for (let courseId of [...state.courseIds, ...state.hiddenCourseIds]) {
+    addCourse(courseId)
   }
 }
 
 async function initializeDashboard(container) {
-  let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
+  let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=current_grading_period_scores&include[]=total_scores', {
     headers: CANVAS_HEADERS
   });
   courses = await courses.json();
 
+  console.log(courses);
+
   let grades = {};
 
   courses.forEach((course) => {
-    if (course.enrollments[0].type === "student") {
-      let score = course.enrollments[0].computed_current_score;
-      if (score)
-        grades[course.name] = score;
+    let enrollment = course.enrollments[0];
+    if (enrollment.type === "student") {
+      if (enrollment.current_period_computed_current_score || enrollment.computed_current_score)
+        grades[course.id] = {
+          score: enrollment.current_period_computed_current_score || enrollment.computed_current_score,
+          name: course.name
+        };
     }
   });
   console.log(grades);
