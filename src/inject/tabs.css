@@ -2,34 +2,37 @@
     position: relative;
     display: flex;
 
-    height: 48px;
     width: 100%;
 
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #C7CDD1;
 }
 
 .tabs-course {
     display: inline-block;
     flex: 1;
-    height: 40px;
-    line-height: 40px;
-    padding: 0 8px;
-    margin: 8px 2px 0;
+    line-height: 48px;
+    padding: 6px 8px 0;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
+    text-decoration: none !important;
 
-    background: #ccc;
+    /*background: #ccc;*/
     border-radius: 2px 2px 0 0;
 
     transition: all 200ms;
 }
 
+.tabs-course:not(:first-child):not(:nth-last-child(2)) {
+    border-left: 1px solid #C7CDD1;
+}
+
 .tabs-course:hover {
-    background: #ddd;
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .tabs-course.selected {
-    background: #eee;
+    background: rgba(0, 0, 0, 0.02);
     border-bottom: 1px solid white;
 }
 
@@ -43,13 +46,16 @@
 .tabs-dropdown {
     display: block;
     position: absolute;
-    top: 49px;
+    top: 55px;
     right: 0;
     opacity: 0;
 
-    background: #efefef;
-    border-radius: 8px;
-    padding: 16px;
+
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 4px;
 
     z-index: 100;
     pointer-events: none;
@@ -62,7 +68,19 @@
 
 .tabs-dropdown a {
     display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+
+    transition: background 200ms;
 }
+
+.tabs-dropdown a:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/*.tabs-dropdown a:not(:last-child) {*/
+/*    border-bottom: 1px solid rgba(0, 0, 0, 0.1);*/
+/*}*/
 
 /* hide the courses button on the sidebar */
 .tabs-enabled #menu li:nth-child(3) {
