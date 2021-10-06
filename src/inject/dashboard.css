@@ -21,6 +21,10 @@
     padding: 0 16px 0 0;
 }
 
+#dashboard-addons td {
+    overflow: hidden;
+}
+
 #dashboard-addons td > * {
     width: auto;
     min-width: 0;
@@ -28,6 +32,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-right: 8px;
 }
 
 #upcoming-assignments tr > *:first-child {

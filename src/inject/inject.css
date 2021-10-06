@@ -7,7 +7,7 @@
     margin: 0 auto;
 
     width: 260px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 12px;
     border-radius: 4px;
@@ -22,4 +22,14 @@
 
 .canvas-plus-message a:hover {
     color: white;
+}
+
+.ic-Layout-wrapper {
+    max-width: initial !important;
+}
+
+@media (max-width: 768px) {
+    #left-side, #header, .ic-app-nav-toggle-and-crumbs {
+        display: none !important;
+    }
 }

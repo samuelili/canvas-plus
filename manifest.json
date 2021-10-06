@@ -1,6 +1,6 @@
 {
   "name": "Canvas+",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "manifest_version": 2,
   "description": "An extension to enhance the Canvas with features students want",
   "homepage_url": "http://github.com/samuelili/canvas-plus",
@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.instructure.com/*"
+        "https://*.instructure.com/*",
+        "https://canvas.ucdavis.edu/*"
       ],
       "css": [
         "src/inject/inject.css",
@@ -28,7 +29,8 @@
     },
     {
       "matches": [
-        "https://*.instructure.com/*"
+        "https://*.instructure.com/*",
+        "https://canvas.ucdavis.edu/*"
       ],
       "js": [
         "src/inject/jquery.min.js",

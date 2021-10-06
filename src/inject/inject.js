@@ -1,8 +1,8 @@
 const updateMessage = {
-  version: "0.3.2",
+  version: "0.3.4",
   firstMessage: "Thanks for installing Canvas+! Be sure to go to settings to customize your experience!",
   message: "This extension is under heavy development, if there are any issues please DM @samuelili",
-  changes: ["bruh I rlly said grades are due dates (i fixed it)", "You can click on the grades again to go to the grades!", "Fixed an issue where it showed you the wrong grade"],
+  changes: ["Fixed a bunch of small graphical bugs for the Davis canvas website as well as the issue regarding course name spilling into the due date column."],
 }
 const DEFAULT_VERSION = "0.0.0";
 const INSTANCE = window.location.hostname.split('.')[0];
