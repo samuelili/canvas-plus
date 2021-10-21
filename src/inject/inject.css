@@ -1,4 +1,4 @@
-.canvas-plus-message {
+#canvas-plus .canvas-plus-message {
     display: block;
     position: fixed;
     bottom: 16px;
@@ -15,21 +15,22 @@
     z-index: 1000000;
 }
 
-.canvas-plus-message a {
+#canvas-plus .canvas-plus-message a {
     color: white;
     cursor: pointer;
 }
 
-.canvas-plus-message a:hover {
+#canvas-plus .canvas-plus-message a:hover {
     color: white;
 }
 
-.ic-Layout-wrapper {
+#canvas-plus .ic-Layout-wrapper {
     max-width: initial !important;
 }
 
 @media (max-width: 768px) {
-    #left-side, #header, .ic-app-nav-toggle-and-crumbs {
+    #canvas-plus #left-side, #header,
+    #canvas-plus .ic-app-nav-toggle-and-crumbs {
         display: none !important;
     }
 }

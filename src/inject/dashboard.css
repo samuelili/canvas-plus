@@ -1,31 +1,45 @@
-#dashboard-addons {
+#canvas-plus #dashboard-addons {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
 }
 
-#dashboard-addons > * {
+#canvas-plus #dashboard-addons > * {
     flex-shrink: 1;
 }
 
-#dashboard-grades {
-    display: inline-block;
-    margin-right: 16px;
+#canvas-plus #dashboard-addons h1 {
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #C7CDD1;
 }
 
-#upcoming-assignments-container, #dashboard-grades-container {
+#canvas-plus #dashboard-grades {
+    display: inline-block;
+    margin-right: 24px;
+}
+
+#canvas-plus #dashboard-grades tr > *:last-child {
+    text-align: center;
+}
+
+#canvas-plus #dashboard-grades tr > *:last-child > div {
+    width: 100%;
+}
+
+#canvas-plus #upcoming-assignments-container, #dashboard-grades-container {
     display: inline-block;
 }
 
-#dashboard-addons td, th {
+#canvas-plus #dashboard-addons td, th {
     padding: 0 16px 0 0;
 }
 
-#dashboard-addons td {
+#canvas-plus #dashboard-addons td {
     overflow: hidden;
 }
 
-#dashboard-addons td > * {
+#canvas-plus #dashboard-addons td > * {
     width: auto;
     min-width: 0;
     display: inline-block;
@@ -35,90 +49,103 @@
     margin-right: 8px;
 }
 
-#upcoming-assignments tr > *:first-child {
+#canvas-plus #upcoming-assignments tr > *:first-child {
     border: 0;
     white-space: nowrap;
 }
 
-#upcoming-assignments tr > *:nth-child(2) {
+#canvas-plus #upcoming-assignments tr > *:nth-child(2) {
     /*max-width: 30%;*/
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 204px;
 }
 
-#upcoming-assignments tr > *:nth-child(3) {
+#canvas-plus #upcoming-assignments tr > *:nth-child(3) {
     text-align: center;
 }
 
+#canvas-plus #upcoming-assignments tr .assignments-checkbox {
+    opacity: 0;
+    transition: 200ms opacity;
+}
+
+#canvas-plus #upcoming-assignments tr:hover .assignments-checkbox {
+    opacity: 1;
+}
+
 @media only screen and (max-width: 1100px) {
-    #dashboard-addons td:first-child > * {
+    #canvas-plus #dashboard-addons td:first-child > * {
         max-width: 300px;
     }
-    #dashboard-addons td:nth-child(2) > * {
+
+    #canvas-plus #dashboard-addons td:nth-child(2) > * {
         max-width: 148px;
     }
-    #dashboard-addons td:nth-child(3) > * {
+
+    #canvas-plus #dashboard-addons td:nth-child(3) > * {
         max-width: 74px;
     }
 }
 
 @media only screen and (max-width: 768px) {
-    #dashboard-addons td:first-child > * {
+    #canvas-plus #dashboard-addons td:first-child > * {
         max-width: 280px;
     }
-    #dashboard-addons td:nth-child(2) > * {
+
+    #canvas-plus #dashboard-addons td:nth-child(2) > * {
         max-width: 148px;
     }
-    #dashboard-addons td:nth-child(3) > * {
+
+    #canvas-plus #dashboard-addons td:nth-child(3) > * {
         max-width: 74px;
     }
 
-    #dashboard-grades {
+    #canvas-plus #dashboard-grades {
         margin-right: 0;
     }
 }
 
 /* dashboard */
-.ic-dashboard-app {
+#canvas-plus .ic-dashboard-app {
     margin-top: 0 !important;
 }
 
-#grades-title {
+#canvas-plus #grades-title {
     margin: 0 0 16px;
     height: 72px;
     line-height: 72px;
     border-bottom: 1px solid #C7CDD1;
 }
 
-.course_details {
+#canvas-plus .course_details {
     border-collapse: collapse;
     min-width: 400px;
     margin-left: 20px;
     border-spacing: 0;
 }
 
-.course_details .course {
+#canvas-plus .course_details .course {
     font-size: 1.2em;
     padding: 6px 50px 6px 5px;
 }
 
-.course_details .percent {
+#canvas-plus .course_details .percent {
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;
     min-width: 73px;
 }
 
-.course_details td {
+#canvas-plus .course_details td {
     border-bottom: 1px solid #ccc;
 }
 
-.ic-DashboardCard {
+#canvas-plus .ic-DashboardCard {
     position: relative;
 }
 
-.ic-DashboardCard .grade-tag {
+#canvas-plus .ic-DashboardCard .grade-tag {
     position: absolute;
     top: 16px;
     left: 16px;
@@ -126,5 +153,5 @@
     color: white;
     font-size: 80%;
     padding: 8px;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }

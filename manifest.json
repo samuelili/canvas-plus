@@ -17,8 +17,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.instructure.com/*",
-        "https://canvas.ucdavis.edu/*"
+        "*://*/*"
       ],
       "css": [
         "src/inject/inject.css",
@@ -29,8 +28,7 @@
     },
     {
       "matches": [
-        "https://*.instructure.com/*",
-        "https://canvas.ucdavis.edu/*"
+        "*://*/*"
       ],
       "js": [
         "src/inject/jquery.min.js",

@@ -37,6 +37,7 @@ async function upcomingAssignments(container) {
       row.innerHTML += `<td><a href="${assignment.htmlUrl}">${assignment.name}</a></td>`
       row.innerHTML += `<td><div>${assignment.courseName}</div></td>`
       row.innerHTML += `<td><div>${assignment.dueDate.format('MMM DD')}</div></td>`
+      row.innerHTML += `<td class="assignments-checkbox"><div><input type="checkbox"/></div></td>`
       upcomingAssignments.append(row);
     }
   }

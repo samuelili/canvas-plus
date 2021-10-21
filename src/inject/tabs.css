@@ -1,4 +1,4 @@
-#tabs-courses {
+#canvas-plus #tabs-courses {
     position: relative;
     display: flex;
 
@@ -7,7 +7,7 @@
     border-bottom: 1px solid #C7CDD1;
 }
 
-.tabs-course {
+#canvas-plus .tabs-course {
     display: inline-block;
     flex: 1;
     line-height: 48px;
@@ -23,27 +23,27 @@
     transition: all 200ms;
 }
 
-.tabs-course:not(:first-child):not(:nth-last-child(2)) {
+#canvas-plus .tabs-course:not(:first-child):not(:nth-last-child(2)) {
     border-left: 1px solid #C7CDD1;
 }
 
-.tabs-course:hover {
+#canvas-plus .tabs-course:hover {
     background: rgba(0, 0, 0, 0.04);
 }
 
-.tabs-course.selected {
+#canvas-plus .tabs-course.selected {
     background: rgba(0, 0, 0, 0.02);
     border-bottom: 1px solid white;
 }
 
-.tabs-dropdown-button {
+#canvas-plus .tabs-dropdown-button {
     flex: 0 1 40px;
     cursor: pointer;
     max-width: 24px; /* i do not know why this works but it works */
     text-align: center;
 }
 
-.tabs-dropdown {
+#canvas-plus .tabs-dropdown {
     display: block;
     position: absolute;
     top: 55px;
@@ -61,12 +61,12 @@
     pointer-events: none;
 }
 
-.tabs-dropdown.active {
+#canvas-plus .tabs-dropdown.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-.tabs-dropdown a {
+#canvas-plus .tabs-dropdown a {
     display: block;
     padding: 8px 12px;
     border-radius: 4px;
@@ -74,21 +74,21 @@
     transition: background 200ms;
 }
 
-.tabs-dropdown a:hover {
+#canvas-plus .tabs-dropdown a:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-/*.tabs-dropdown a:not(:last-child) {*/
+/*#canvas-plus .tabs-dropdown a:not(:last-child) {*/
 /*    border-bottom: 1px solid rgba(0, 0, 0, 0.1);*/
 /*}*/
 
 /* hide the courses button on the sidebar */
-.tabs-enabled #menu li:nth-child(3) {
+#canvas-plus .tabs-enabled #menu li:nth-child(3) {
     display: none;
 }
 
 @media only screen and (max-width: 768px) {
-    #tabs-courses {
+    #canvas-plus #tabs-courses {
         display: none;
     }
 }
