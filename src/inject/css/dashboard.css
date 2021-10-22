@@ -1,45 +1,45 @@
-#canvas-plus #dashboard-addons {
+#dashboard-addons {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
 }
 
-#canvas-plus #dashboard-addons > * {
+#dashboard-addons > * {
     flex-shrink: 1;
 }
 
-#canvas-plus #dashboard-addons h1 {
+#dashboard-addons h1 {
     padding-bottom: 12px;
     margin-bottom: 8px;
     border-bottom: 1px solid #C7CDD1;
 }
 
-#canvas-plus #dashboard-grades {
+#dashboard-grades {
     display: inline-block;
     margin-right: 24px;
 }
 
-#canvas-plus #dashboard-grades tr > *:last-child {
+#dashboard-grades .assignments-score {
     text-align: center;
 }
 
-#canvas-plus #dashboard-grades tr > *:last-child > div {
+#dashboard-grades .assignments-score > div {
     width: 100%;
 }
 
-#canvas-plus #upcoming-assignments-container, #dashboard-grades-container {
+#upcoming-assignments-container, #dashboard-grades-container {
     display: inline-block;
 }
 
-#canvas-plus #dashboard-addons td, th {
+#dashboard-addons td, th {
     padding: 0 16px 0 0;
 }
 
-#canvas-plus #dashboard-addons td {
+#dashboard-addons td {
     overflow: hidden;
 }
 
-#canvas-plus #dashboard-addons td > * {
+#dashboard-addons td > * {
     width: auto;
     min-width: 0;
     display: inline-block;
@@ -49,103 +49,103 @@
     margin-right: 8px;
 }
 
-#canvas-plus #upcoming-assignments tr > *:first-child {
+#upcoming-assignments tr > *:first-child {
     border: 0;
     white-space: nowrap;
 }
 
-#canvas-plus #upcoming-assignments tr > *:nth-child(2) {
+#upcoming-assignments tr > *:nth-child(2) {
     /*max-width: 30%;*/
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 204px;
 }
 
-#canvas-plus #upcoming-assignments tr > *:nth-child(3) {
+#upcoming-assignments tr > *:nth-child(3) {
     text-align: center;
 }
 
-#canvas-plus #upcoming-assignments tr .assignments-checkbox {
+#upcoming-assignments tr .assignments-checkbox {
     opacity: 0;
     transition: 200ms opacity;
 }
 
-#canvas-plus #upcoming-assignments tr:hover .assignments-checkbox {
+#upcoming-assignments tr:hover .assignments-checkbox {
     opacity: 1;
 }
 
 @media only screen and (max-width: 1100px) {
-    #canvas-plus #dashboard-addons td:first-child > * {
+    #dashboard-addons td:first-child > * {
         max-width: 300px;
     }
 
-    #canvas-plus #dashboard-addons td:nth-child(2) > * {
+    #dashboard-addons td:nth-child(2) > * {
         max-width: 148px;
     }
 
-    #canvas-plus #dashboard-addons td:nth-child(3) > * {
+    #dashboard-addons td:nth-child(3) > * {
         max-width: 74px;
     }
 }
 
 @media only screen and (max-width: 768px) {
-    #canvas-plus #dashboard-addons td:first-child > * {
+    #dashboard-addons td:first-child > * {
         max-width: 280px;
     }
 
-    #canvas-plus #dashboard-addons td:nth-child(2) > * {
+    #dashboard-addons td:nth-child(2) > * {
         max-width: 148px;
     }
 
-    #canvas-plus #dashboard-addons td:nth-child(3) > * {
+    #dashboard-addons td:nth-child(3) > * {
         max-width: 74px;
     }
 
-    #canvas-plus #dashboard-grades {
+    #dashboard-grades {
         margin-right: 0;
     }
 }
 
 /* dashboard */
-#canvas-plus .ic-dashboard-app {
+.ic-dashboard-app {
     margin-top: 0 !important;
 }
 
-#canvas-plus #grades-title {
+#grades-title {
     margin: 0 0 16px;
     height: 72px;
     line-height: 72px;
     border-bottom: 1px solid #C7CDD1;
 }
 
-#canvas-plus .course_details {
+.course_details {
     border-collapse: collapse;
     min-width: 400px;
     margin-left: 20px;
     border-spacing: 0;
 }
 
-#canvas-plus .course_details .course {
+.course_details .course {
     font-size: 1.2em;
     padding: 6px 50px 6px 5px;
 }
 
-#canvas-plus .course_details .percent {
+.course_details .percent {
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;
     min-width: 73px;
 }
 
-#canvas-plus .course_details td {
+.course_details td {
     border-bottom: 1px solid #ccc;
 }
 
-#canvas-plus .ic-DashboardCard {
+.ic-DashboardCard {
     position: relative;
 }
 
-#canvas-plus .ic-DashboardCard .grade-tag {
+.ic-DashboardCard .grade-tag {
     position: absolute;
     top: 16px;
     left: 16px;

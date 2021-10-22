@@ -1,3 +1,9 @@
 
 better-canvas.zip
 canvas-plus.zip
+extension/src/bg/background.js
+extension/src/inject/inject.js
+extension/src/inject/inject.css
+extension/src/options/index.css
+extension/src/options/index.js
+node_modules

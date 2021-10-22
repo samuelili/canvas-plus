@@ -20,10 +20,7 @@
         "*://*/*"
       ],
       "css": [
-        "src/inject/inject.css",
-        "src/inject/tabs.css",
-        "src/inject/dashboard.css",
-        "src/inject/custom-link.css"
+        "src/inject/inject.css"
       ]
     },
     {
@@ -31,14 +28,9 @@
         "*://*/*"
       ],
       "js": [
-        "src/inject/jquery.min.js",
-        "src/inject/moment.min.js",
-        "src/inject/tabs.js",
-        "src/inject/dashboard.js",
-        "src/inject/custom-link.js",
         "src/inject/inject.js"
       ],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
   ],
   "permissions": [

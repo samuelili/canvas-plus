@@ -1,0 +1,20 @@
+.Card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: background 200ms;
+}
+
+.Card:hover {
+    background: rgba(204, 229, 255, 0.18);
+}
+
+.Card > div:first-child {
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+}
+
+.Card > div {
+    padding: 8px;
+}
