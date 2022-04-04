@@ -1,74 +1,76 @@
 import ReactDOM from "react-dom";
-import React from "react";
-import Extension from "../inject";
+import React, {useEffect, useState} from "react";
 
 import '../css/tabs.css';
+import classnames from "classnames";
 
-async function getTabs() {
-  let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
-    headers: CANVAS_HEADERS
-  });
-  courses = await courses.json();
+async function fetchTabs(callback) {
+    chrome.runtime.sendMessage({
+        action: "GET_COURSES",
+        instance: INSTANCE_NAME
+    }, callback)
 
-  console.log(courses);
+    let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
+        headers: CANVAS_HEADERS
+    });
+    courses = await courses.json();
 
-  sessionStorage.setItem('courses', "true");
-  chrome.runtime.sendMessage({
-    action: "SET_COURSES",
-    courses,
-    instance: Extension.INSTANCE
-  }, newState => {
-    Extension.state = newState;
-    createTabs();
-  })
+    chrome.runtime.sendMessage({
+        action: "SET_COURSES",
+        courses,
+        instance: INSTANCE_NAME
+    }, callback)
 }
 
-const Tabs = ({courses, courseIds}) => {
-  return (
-    <>
-      {courseIds.map(courseId => {
-        const course = courses[courseId];
-        return (
-          <a href={`/courses/${course.id}`} key={course.id}
-             className={"tabs-course " + (window.location.pathname.split('/')[2] === course.id ? "selected" : " ")}>
-            {course.name}
-          </a>
-        );
-      })}
-      <div className="tabs-course tabs-dropdown-button">☰</div>
-      <div className="tabs-dropdown">
-        <a href="/courses">All Courses</a>
-        <a href="#" className="settings">Settings</a>
-      </div>
-    </>
-  );
-}
+const Tabs = ({instance}) => {
+    const [courses, setCourses] = useState(instance);
+    const [courseIds, setCourseIds] = useState([]);
+    const [active, setActive] = useState(false);
 
-function createTabs() {
-  let courseIds = Extension.state.courseIds;
-  let courses = Extension.state.courses;
+    useEffect(async () => {
+        await fetchTabs(({courses, courseIds}) => {
+            setCourses(courses);
+            setCourseIds(courseIds);
+        });
+    }, []);
 
-  console.log('Creating tabs with', courseIds, courses);
-  document.body.classList.add('tabs-enabled');
-  let topBarCourses = document.createElement("div");
-  topBarCourses.id = "tabs-courses";
-  // need to shift page down if in conversations
-  if (window.location.pathname.split('/')[1].startsWith('conversations'))
-    document.getElementById('main').style.top = '50px';
-
-  document.getElementById("wrapper").prepend(topBarCourses);
-  ReactDOM.render(
-    <Tabs courses={courses} courseIds={courseIds}/>,
-    topBarCourses
-  );
+    return (
+        <>
+            {courseIds.map(courseId => {
+                const course = courses[courseId];
+                return (
+                    <a href={`/courses/${course.id}`} key={course.id}
+                       className={"tabs-course " + (window.location.pathname.split('/')[2] === course.id ? "selected" : " ")}>
+                        {course.displayName}
+                    </a>
+                );
+            })}
+            <div className="tabs-course tabs-dropdown-button" onClick={() => setActive(!active)}>☰</div>
+            <div className={classnames({
+                "tabs-dropdown": true,
+                "active": active
+            })}>
+                <a href="/courses">All Courses</a>
+                <a href={'#'} className="settings"
+                   onClick={() => chrome.runtime.sendMessage({action: "OPTIONS"})}>Settings</a>
+            </div>
+        </>
+    );
 }
 
 export default function tabsInit() {
-  if (!sessionStorage.getItem('courses')) {
-    getTabs();
-  } else if (Extension.state.settings.tabsEnabled) {
-    createTabs();
-  }
-  // } else
-  //   settingsButton();
+    document.body.classList.add('tabs-enabled');
+    let topBarCourses = document.createElement("div");
+    topBarCourses.id = "tabs-courses";
+
+    // need to shift page down if in conversations
+    if (window.location.pathname.split('/')[1].startsWith('conversations'))
+        document.getElementById('main').style.top = '50px';
+
+    document.getElementById("wrapper").prepend(topBarCourses);
+    ReactDOM.render(
+        <Tabs instance={globalInstance}/>,
+        topBarCourses
+    );
+    //   settingsButton();
 }

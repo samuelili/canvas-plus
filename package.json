@@ -18,8 +18,11 @@
     "build": "webpack"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "antd": "^4.19.5",
+    "classnames": "^2.3.1",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "momentjs": "^2.0.0",
