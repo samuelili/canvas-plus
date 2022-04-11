@@ -1,26 +1,30 @@
-import Extension from "../inject";
+import Extension from "./Extension";
 
 function initializeCustomLink() {
-  let id = window.location.pathname.split('/')[2]
-  if (!Object.keys(Extension.state.courses).includes(id)) return;
-  let custom = Extension.state.courses[id].custom;
-  console.log("Got course link", id, Extension.state.courses);
+    const instance = Extension.instance;
 
-  if (custom !== "") {
-    console.log('Got custom link', custom);
-    let buttonContainer = document.getElementById('course_show_secondary');
+    let id = window.location.pathname.split('/')[2]
+    if (!Object.keys(instance.courses).includes(id)) return;
+    let customLinks = instance.courses[id].customLinks;
+    console.log("Got course links", customLinks);
 
-    let button = document.createElement('a');
-    button.className = "btn button-sidebar-wide";
-    button.href = custom;
-    button.target = '_blank';
+    if (Object.keys(customLinks).length !== 0) {
+        for (let customLinkName of Object.keys(customLinks).reverse()) {
+            console.log('Got custom link', customLinkName, customLinks[customLinkName]);
+            let buttonContainer = document.getElementById('course_show_secondary');
 
-    button.innerHTML = '<i class="icon-link"></i> Custom Link';
-    buttonContainer.prepend(button);
-  }
+            let button = document.createElement('a');
+            button.className = "btn button-sidebar-wide";
+            button.href = customLinks[customLinkName];
+            button.target = '_blank';
+
+            button.innerHTML = `<i class="icon-link"></i> ${customLinkName}`;
+            buttonContainer.prepend(button);
+        }
+    }
 }
 
 export default function customInit() {
-  if (window.location.pathname.split('/')[1] === 'courses')
-    initializeCustomLink()
+    if (window.location.pathname.split('/')[1] === 'courses')
+        initializeCustomLink()
 }

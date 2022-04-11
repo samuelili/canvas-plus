@@ -101,10 +101,7 @@ function setCourses(request, sender, sendResponse) {
     }
 
     sync(request.instance);
-    sendResponse({
-        courseIds: instance.courseIds,
-        courses: instance.courses,
-    });
+    sendResponse(instance);
 
     // let instance = state[request.instance];
     // let newCourses = request.courses;

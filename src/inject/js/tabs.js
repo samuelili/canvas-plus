@@ -3,13 +3,9 @@ import React, {useEffect, useState} from "react";
 
 import '../css/tabs.css';
 import classnames from "classnames";
+import Extension, {ExtensionWrapper} from "./Extension";
 
-async function fetchTabs(callback) {
-    chrome.runtime.sendMessage({
-        action: "GET_COURSES",
-        instance: INSTANCE_NAME
-    }, callback)
-
+async function fetchTabs() {
     let courses = await fetch('/api/v1/users/self/favorites/courses?include[]=total_scores', {
         headers: CANVAS_HEADERS
     });
@@ -18,21 +14,20 @@ async function fetchTabs(callback) {
     chrome.runtime.sendMessage({
         action: "SET_COURSES",
         courses,
-        instance: INSTANCE_NAME
-    }, callback)
+        instance: Extension.INSTANCE_NAME
+    }, instance => {
+        Extension.instance = instance;
+        Extension.update();
+    });
 }
 
 const Tabs = ({instance}) => {
-    const [courses, setCourses] = useState(instance);
-    const [courseIds, setCourseIds] = useState([]);
+    const {courses, courseIds} = instance;
+    // const [courses, setCourses] = useState(instance);
+    // const [courseIds, setCourseIds] = useState([]);
     const [active, setActive] = useState(false);
 
-    useEffect(async () => {
-        await fetchTabs(({courses, courseIds}) => {
-            setCourses(courses);
-            setCourseIds(courseIds);
-        });
-    }, []);
+    useEffect(fetchTabs, []);
 
     return (
         <>
@@ -69,7 +64,9 @@ export default function tabsInit() {
 
     document.getElementById("wrapper").prepend(topBarCourses);
     ReactDOM.render(
-        <Tabs instance={globalInstance}/>,
+        <ExtensionWrapper>
+            <Tabs/>
+        </ExtensionWrapper>,
         topBarCourses
     );
     //   settingsButton();

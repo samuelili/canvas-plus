@@ -3,7 +3,7 @@ import {Card, Col, Row, Switch, Typography} from "antd";
 import Course from "./Course";
 
 const Instance = ({
-                      instance, instanceName, updateInstance = () => {
+                      instance, updateInstance = () => {
     }
                   }) => {
     const toggleSetting = key => {

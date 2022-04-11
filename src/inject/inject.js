@@ -1,22 +1,25 @@
 // initialization code
 import tabsInit from "./js/tabs";
+import customInit from "./js/custom-link";
+import {dashboardInit} from "./js/dashboard";
+import Extension from "./js/Extension";
 
-let globalInstance = {};
+import './css/inject.css';
+import changelog from "./js/changelog";
 
 if ((location.hostname.includes("canvas") && location.hostname.includes("edu")) || location.hostname.includes("instructure.com")) {
     // set some constants
-    window.INSTANCE_NAME = location.hostname;
+    Extension.INSTANCE_NAME = location.hostname;
     window.CANVAS_HEADERS = {
         accept: "application/json, text/javascript, application/json+canvas-string-ids"
     };
 
     chrome.runtime.sendMessage({
         action: 'REGISTER_INSTANCE',
-        instance: INSTANCE_NAME
+        instance: Extension.INSTANCE_NAME
     }, function (instance) {
-        window.globalInstance = instance;
+        Extension.instance = instance;
         let settings = instance.settings;
-        console.log(settings);
 
         (function () {
             if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -26,13 +29,16 @@ if ((location.hostname.includes("canvas") && location.hostname.includes("edu")) 
                     tabsInit();
                 } else settingsButton();
 
+                if (settings.gradesEnabled) {
+                    dashboardInit()
+                }
 
-                // customInit();
+                customInit();
             } else
                 window.addEventListener('DOMContentLoaded', this);
 
+            changelog();
         })();
-
     });
 }
 
