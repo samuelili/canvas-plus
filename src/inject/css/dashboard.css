@@ -1,7 +1,12 @@
+#dashboard_header_container {
+    background: rgba(255, 255, 255, 0.9);
+}
+
 #dashboard-addons {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    gap: 16px;
 }
 
 #dashboard-addons > * {
@@ -16,7 +21,6 @@
 
 #dashboard-grades {
     display: inline-block;
-    margin-right: 24px;
 }
 
 #dashboard-grades .assignments-score {
@@ -121,7 +125,6 @@
 .course_details {
     border-collapse: collapse;
     min-width: 400px;
-    margin-left: 20px;
     border-spacing: 0;
 }
 
@@ -154,4 +157,10 @@
     font-size: 80%;
     padding: 8px;
     background: rgba(0, 0, 0, 0.5);
+}
+
+@media only screen and (max-width: 960px) {
+    .UpcomingAssignments-course {
+        display: none;
+    }
 }

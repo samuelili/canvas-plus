@@ -1,10 +1,18 @@
 #canvas-plus #tabs-courses {
-    position: relative;
+    position: fixed;
+    top: 0;
     display: flex;
 
-    width: 100%;
+    width: calc(100% - 54px);
 
     border-bottom: 1px solid #C7CDD1;
+
+    background: white;
+    z-index: 1000;
+}
+
+.primary-nav-expanded #tabs-courses {
+    width: calc(100% - 84px) !important;
 }
 
 #canvas-plus .tabs-course {
