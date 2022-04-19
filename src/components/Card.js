@@ -4,7 +4,7 @@ import '../styles/Card.css';
 
 const Card = ({title, children, ...props}) => (
   <div className={"Card"} {...props}>
-    <div>
+    <div style={{display: 'flex'}}>
       {title}
     </div>
     <div>

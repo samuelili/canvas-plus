@@ -1,6 +1,7 @@
 import React from 'react';
-import {Card, Col, Row, Switch, Typography} from "antd";
+import {Button, Card, Col, List, Row, Switch, Typography} from "antd";
 import Course from "./Course";
+import {DeleteOutlined} from "@ant-design/icons";
 
 const Instance = ({
                       instance, updateInstance = () => {
@@ -42,10 +43,17 @@ const Instance = ({
         updateInstance(cpy);
     }
 
+    const removeHiddenAssignment = i => {
+        let cpy = {...instance};
+        cpy.hiddenAssignments.splice(i, 1);
+
+        updateInstance(cpy);
+    }
+
     return (
         <>
             <Row>
-                <Typography.Title level={3}>
+                <Typography.Title level={2}>
                     Features
                 </Typography.Title>
             </Row>
@@ -89,7 +97,7 @@ const Instance = ({
             </Row>
             <Row style={{marginBottom: 8}}>
                 <Col xs={24}>
-                    <Typography.Title level={3}>
+                    <Typography.Title level={2}>
                         Courses
                     </Typography.Title>
                     The order of courses listed here is the same as the order of courses in the
@@ -111,7 +119,7 @@ const Instance = ({
 
             <Row>
                 <Col xs={24}>
-                    <Typography.Title level={5}>
+                    <Typography.Title level={4}>
                         Hidden Courses
                     </Typography.Title>
                     The order of courses listed here is the same as the order of courses in the
@@ -130,6 +138,31 @@ const Instance = ({
                     </Col>
                 </Row>
             ))}
+
+            {instance.hiddenCourseIds.length === 0 ?
+                <Card style={{width: 300, textAlign: "center", margin: "16px 0"}}>
+                    You have no hidden courses! :)
+                </Card> : <></>}
+
+            <Row style={{marginBottom: 8}}>
+                <Col xs={24}>
+                    <Typography.Title level={2}>
+                        Hidden Assignments
+                    </Typography.Title>
+                    Unhide assignments here
+                </Col>
+            </Row>
+
+            {instance.hiddenAssignments.length !== 0 ?
+                <List>
+                    {instance.hiddenAssignments.map((assignment, i) => (
+                        <List.Item style={{display: 'flex'}} extra={<Button icon={<DeleteOutlined/>} type={"danger"} onClick={() => removeHiddenAssignment(i)}/>}>
+                            {assignment.name}
+                        </List.Item>
+                    ))}
+                </List> : <Card style={{width: 300, textAlign: "center", margin: "16px 0"}}>
+                    You have no hidden assignments! :)
+                </Card>}
         </>
     );
 }

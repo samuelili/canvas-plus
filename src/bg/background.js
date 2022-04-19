@@ -1,7 +1,10 @@
+import moment from "moment";
+
 let DEFAULT_INSTANCE = {
     courses: {},
     courseIds: [],
     hiddenCourseIds: [],
+    hiddenAssignments: [],
     settings: {
         tabsEnabled: true,
         gradesEnabled: true,
@@ -160,8 +163,17 @@ function getTabs({instance}, sender, sendResponse) {
     })
 }
 
-function reset() {
-    state = {}
+function hideAssignment({instance, assignment}, sender, sendResponse) {
+    state[instance].hiddenAssignments.push(assignment);
+
+    state[instance].hiddenAssignments.filter(assignment => moment(assignment.dueDate) > moment());
+
+    sync(instance);
+    sendResponse(state[instance].hiddenAssignments);
+}
+
+window.reset = () => {
+    state = {};
 }
 
 //example of using a message handler from the inject scripts
@@ -192,6 +204,9 @@ chrome.extension.onMessage.addListener(
                 break;
             case "GET_TABS":
                 getTabs(request, sender, sendResponse);
+                break;
+            case "HIDE_ASSIGNMENT":
+                hideAssignment(request, sender, sendResponse)
                 break;
             case "OPTIONS":
                 if (chrome.runtime.openOptionsPage) {

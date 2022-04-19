@@ -1,8 +1,8 @@
 export const updateMessage = {
-    version: "0.3.7",
+    version: "0.3.8",
     firstMessage: "Thanks for installing Canvas+! Be sure to go to settings (on the top right in the dropdown) to customize your experience!",
     message: "This extension is under heavy development, if there are any issues please DM @samuelili",
-    changes: ["Classes can now be renamed to user preference (see options on the top right)", "Rewrote the options page and made it pretty!"],
+    changes: ["Y'all the checkboxes to hide assignments work now ur welcome"],
 }
 const DEFAULT_VERSION = "0.0.0";
 

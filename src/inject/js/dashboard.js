@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import moment from "moment";
 import Card from "../../components/Card";
 import {CANVAS_HEADERS} from "../constants";
+import {MoreOutlined} from "@ant-design/icons";
 
 import '../css/dashboard.css';
 import Extension, {ExtensionWrapper} from "./Extension";
@@ -38,7 +39,8 @@ const Grades = ({grades}) => {
     );
 }
 
-const UpcomingAssignments = ({courses}) => {
+const UpcomingAssignments = ({courses, instance}) => {
+    const [hiddenAssignments, setHiddenAssignments] = useState(instance.hiddenAssignments);
     const [assignments, setAssignments] = useState([]);
 
     // TODO rewrite with promise.all
@@ -85,8 +87,39 @@ const UpcomingAssignments = ({courses}) => {
         }
     }, [courses]);
 
+    function hideAssignment(name, dueDate) {
+        chrome.runtime.sendMessage({
+            action: "HIDE_ASSIGNMENT",
+            assignment: {name, dueDate: dueDate.unix()},
+            instance: Extension.INSTANCE_NAME
+        }, hiddenAssignments => setHiddenAssignments(hiddenAssignments));
+    }
+
+    function isHidden(name) {
+        for (let hiddenAssignment of hiddenAssignments) {
+            if (hiddenAssignment.name === name)
+                return true;
+        }
+        return false;
+    }
+
     return (
-        <Card title={"Upcoming Assignments"} style={{marginTop: 16}}>
+        <Card title={
+            <>
+                <div style={{flex: "1"}}>
+                    Upcoming Assignments
+                </div>
+                <button style={{flexShrink: "1", background: "transparent", border: "none", outline: "none"}}
+                        onClick={() => {
+                            chrome.runtime.sendMessage({
+                                action: "OPTIONS"
+                            })
+                        }
+                        }>
+                    <MoreOutlined/>
+                </button>
+            </>
+        } style={{marginTop: 16}}>
             <table>
                 <thead>
                 <tr>
@@ -96,27 +129,32 @@ const UpcomingAssignments = ({courses}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {assignments.map(assignment => (
-                    <tr key={assignment.name}>
-                        <td><a href={assignment.htmlUrl}>{assignment.name}</a></td>
-                        <td className={"UpcomingAssignments-course"}>
-                            <div>{assignment.courseName}</div>
-                        </td>
-                        <td>
-                            <div>{assignment.dueDate.format('MMM DD')}</div>
-                        </td>
-                        <td className="assignments-checkbox">
-                            <div><input type="checkbox"/></div>
-                        </td>
-                    </tr>
-                ))}
+                {assignments.map(assignment => {
+                    if (!isHidden(assignment.name))
+                        return (
+                            <tr key={assignment.name}>
+                                <td><a href={assignment.htmlUrl}>{assignment.name}</a></td>
+                                <td className={"UpcomingAssignments-course"}>
+                                    <div>{assignment.courseName}</div>
+                                </td>
+                                <td>
+                                    <div>{assignment.dueDate.format('MMM DD')}</div>
+                                </td>
+                                <td className="assignments-checkbox">
+                                    <div><input type="checkbox"
+                                                onChange={() => hideAssignment(assignment.name, assignment.dueDate)}/>
+                                    </div>
+                                </td>
+                            </tr>
+                        );
+                })}
                 </tbody>
             </table>
         </Card>
     );
 }
 
-export const Dashboard = () => {
+export const Dashboard = ({instance}) => {
     const [courses, setCourses] = useState([]);
     const [grades, setGrades] = useState({});
     const [visible, setVisible] = useState(true);
@@ -173,8 +211,9 @@ export const Dashboard = () => {
         <>
             {visible ? <>
                 <Grades grades={grades}/>
-                <UpcomingAssignments courses={courses}/></> : <></>}
-            <button type={"button"} className={"btn"} style={{height: 38, marginTop: 16}} onClick={() => setVisible(!visible)}>{visible ? "Hide" : "Show"}</button>
+                <UpcomingAssignments courses={courses} instance={instance}/></> : <></>}
+            <button type={"button"} className={"btn"} style={{height: 38, marginTop: 16}}
+                    onClick={() => setVisible(!visible)}>{visible ? "Hide" : "Show"}</button>
         </>
     )
 }
