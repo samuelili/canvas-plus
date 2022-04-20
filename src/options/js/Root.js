@@ -10,6 +10,8 @@ const Root = () => {
     });
 
     useEffect(() => {
+        document.getElementById('bad-button').remove();
+
         chrome.runtime.sendMessage({
             action: 'GET'
         }, state => {

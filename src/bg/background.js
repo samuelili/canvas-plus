@@ -17,9 +17,21 @@ let DEFAULT_INSTANCE = {
 // also default settings
 let state = {};
 
-// resetting legacy settings goes here in case of version differences
-function resetLegacy() {
-
+// verify state integrity between different versions
+function verifyStateIntegrity() {
+    for (let instanceName of state.instances) {
+        let instance = state[instanceName];
+        for (let courseId of instance.courseIds) {
+            let course = instance[courseId];
+            if (!course.customLinks) {
+                course.customLinks = {};
+                if (course.customLink) {
+                    course.customLinks["Custom Link"] = course.customLink;
+                    delete course.customLink;
+                }
+            }
+        }
+    }
 }
 
 // resetting legacy settings for each instance goes here
@@ -44,8 +56,7 @@ chrome.storage.sync.get({
         });
     }
 
-    console.log(state);
-    resetLegacy();
+    verifyStateIntegrity();
 });
 
 
@@ -181,6 +192,9 @@ chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log('got action', request.action);
         switch (request.action) {
+            case "RESET":
+                reset();
+                break;
             case "GET":
                 get(request, sender, sendResponse);
                 break;
