@@ -1,0 +1,28 @@
+#doc_preview.expanded {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100% !important;
+    width: 100%;
+    background: white;
+    z-index: 100000;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#doc_preview.expanded > *:first-child {
+    flex-shrink: 1;
+    padding: 8px 8px 0;
+}
+
+#doc_preview.expanded > *:last-child {
+    flex: 1;
+    height: auto !important;
+    border: none !important;
+}
+
+#doc_preview iframe {
+    min-height: auto !important;
+    height: calc(100% - 7px) !important;
+}

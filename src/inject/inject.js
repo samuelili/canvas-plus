@@ -2,6 +2,7 @@
 import tabsInit from "./js/tabs";
 import customInit from "./js/custom-link";
 import {dashboardInit} from "./js/dashboard";
+import docPreviewToolsInit from './js/docPreviewTools';
 import Extension from "./js/Extension";
 
 import './css/inject.css';
@@ -30,7 +31,8 @@ if ((location.hostname.includes("canvas") && location.hostname.includes("edu")) 
                 } else settingsButton();
 
                 if (settings.gradesEnabled) {
-                    dashboardInit()
+                    dashboardInit();
+                    docPreviewToolsInit();
                 }
 
                 customInit();

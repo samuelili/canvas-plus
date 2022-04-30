@@ -2,6 +2,9 @@
 
 chromium extension that enchances the canvas experience
 
+## Running
+Run `yarn watch` to start webpack. Open the extension under the `extension` folder in this project. Tdochat's where project files are outputted.
+
 ### State Schema
 
 ```json

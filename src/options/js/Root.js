@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 
 import 'antd/dist/antd.css';
-import {Col, Row, Tabs, Typography} from "antd";
+import {Button, Col, Row, Tabs, Typography} from "antd";
 import Instance from "./Instance";
+import {DeleteOutlined} from "@ant-design/icons";
 
 const Root = () => {
     const [state, setState] = useState({
@@ -55,6 +56,18 @@ const Root = () => {
                             </Tabs.TabPane>
                         );
                     })}
+                    <Tabs.TabPane tab={"Global Settings"} key={state.instances.length}>
+                        Use this if things are broken, because it is likely due to settings issues between different versions.
+                        <br/>
+                        <Button icon={<DeleteOutlined/>} type={"danger"} onClick={() => {
+                            chrome.runtime.sendMessage({
+                                action: "RESET",
+                            })
+                            setTimeout(function() {
+                                window.close();
+                            }, 1000);
+                        }}>Reset All Settings</Button>
+                    </Tabs.TabPane>
                 </Tabs>
             </Col>
         </Row>
