@@ -59,8 +59,8 @@ export default function tabsInit() {
     topBarCourses.id = "tabs-courses";
 
     // need to shift page down if in conversations
-    if (window.location.pathname.split('/')[1].startsWith('conversations'))
-        document.getElementById('main').style.top = '50px';
+    // if (window.location.pathname.split('/')[1].startsWith('conversations'))
+    //     document.getElementById('wrapper').style.paddingTop = '55px';
 
     document.getElementById("wrapper").prepend(topBarCourses);
     ReactDOM.render(

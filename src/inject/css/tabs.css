@@ -1,9 +1,9 @@
 #canvas-plus #tabs-courses {
-    position: fixed;
+    position: sticky;
     top: 0;
     display: flex;
 
-    width: calc(100% - 54px);
+    width: 100%;
 
     border-bottom: 1px solid #C7CDD1;
 
