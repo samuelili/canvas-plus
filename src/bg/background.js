@@ -183,9 +183,9 @@ function hideAssignment({instance, assignment}, sender, sendResponse) {
     sendResponse(state[instance].hiddenAssignments);
 }
 
-window.reset = () => {
-    state = {};
-}
+// window.reset = () => {
+//     state = {};
+// }
 
 //example of using a message handler from the inject scripts
 chrome.extension.onMessage.addListener(
